@@ -40,15 +40,14 @@ The chunkiter module helps you here with two functions, chunkiter.sliceiter for 
 for saving a generator expression to an HDF5 file.
 
 For optimum performance, the input file test.h5 should use Blosc compression and an chunking.
-The recommended way of using chunkiter is to have the chunkshape in the generator expressions (here, 1024x8192) agree with the chunkshape of the input HDF5 file.
+The recommended way of using `chunkiter` is to have the chunkshape in the generator expressions (here, 1024x8192) agree with the chunkshape of the input HDF5 file.
 If this is the case, you can just use `chunkiter.IterableH5Chunks` for loading the data:
 
 ```python
 import numpy as np
-import tables
 import chunkiter
 
-# load array with pytables (shape 100000x8192, 13 GB)
+# load array (shape 100000x8192, 13 GB)
 array = chunkiter.IterableH5Chunks("test.h5", "data")
 
 # do the fft
@@ -67,10 +66,9 @@ If you want to save intermediate results to disk (for example if you want to pro
 
 ```python
 import numpy as np
-import tables
 import chunkiter
 
-# load array with pytables (shape 100000x8192, 13 GB)
+# load array (shape 100000x8192, 13 GB)
 array = chunkiter.IterableH5Chunks("test.h5", "data")
 
 # do the fft
@@ -90,10 +88,9 @@ For your convenience, the results of `chunkiter.IterableH5Chunks` and `chunkiter
 
 ```python
 import numpy as np
-import tables
 import chunkiter
 
-# load array with pytables (shape 100000x8192, 13 GB)
+# load array (shape 100000x8192, 13 GB)
 array = chunkiter.IterableH5Chunks("test.h5", "data")
 
 # do the fft

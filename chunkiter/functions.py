@@ -20,15 +20,16 @@ def multihash(*args, binary=False):
   else: return h.hexdigest()
 
 class IterableH5Chunks(object):
-  def __init__(self, filename, name):
+  def __init__(self, filename, name, chunksize=None):
     self.filename = filename
     self.name = name
     self.identifier = multihash(filename, name)
+    self.chunksize = chunksize
 
   def __iter__(self):
     datafile = tables.open_file(self.filename, "r")
     array = datafile.root[self.name]
-    size = array.chunkshape[0]
+    size = self.chunksize if self.chunksize is not None else array.chunkshape[0]
 
     for startindex in range(0, array.shape[0], size):
       yield array[startindex:startindex+size,...]
