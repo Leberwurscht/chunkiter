@@ -13,7 +13,7 @@ def multihash(*args, binary=False):
   h = hashlib.sha256()
   for a in args:
     h_ = hashlib.sha256()
-    h_.update(a.encode("utf-8"))
+    h_.update(a.encode("utf-8") if type(a)==str else a)
     h.update(h_.digest())
 
   if binary: return h.digest()
