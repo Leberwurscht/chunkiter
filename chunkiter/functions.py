@@ -178,7 +178,6 @@ def rechunk(iterator, chunksize):
       if start_index+d.shape[0]>=chunksize:
         current_chunk[start_index:] = d[:chunksize-start_index,...]
         d = d[chunksize-start_index:,...]
-        print("yield", current_chunk.shape, np.mean(current_chunk))
         yield current_chunk
         current_chunk = np.empty((chunksize,)+d.shape[1:], dtype=d.dtype)
         start_index = 0
