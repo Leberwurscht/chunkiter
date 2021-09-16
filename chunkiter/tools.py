@@ -46,8 +46,8 @@ def concatenate(iterator):
 def _batchavg_chunk(data, batchsize):
   # batchavg for a single chunk
   batches = data.shape[0]//batchsize
-  data = data[:batches*batchsize,...]
   rest = data[batches*batchsize:,...]
+  data = data[:batches*batchsize,...]
   batched_avgs = np.nanmean(data.reshape((batches,batchsize)+data.shape[1:]),axis=1)
   return batched_avgs, rest
 
