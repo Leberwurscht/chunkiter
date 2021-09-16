@@ -64,7 +64,7 @@ def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=Fals
   unnamed_counter = collections.Counter()
   datafiles = []
   datasets = []
-  
+
   for chunk_i,data in enumerate(iterator):
     if not type(data)==tuple: data = (data,)
 
@@ -145,7 +145,7 @@ def cache(iterator, identifier, *input_identifiers, active=True, cachedir="cache
   # otherwise, first compute it
   if os.path.exists(path): os.remove(path)
 
-  if verbose: 
+  if verbose:
     tb = "".join(traceback.format_stack()[:-1]).split("\n")
     tb = "\n".join(["*"+line[1:80] for line in tb])
 
@@ -167,3 +167,22 @@ def cache(iterator, identifier, *input_identifiers, active=True, cachedir="cache
     print()
 
   return IterableH5Chunks(path, "data0")
+
+def rechunk(iterator, chunksize):
+  current_chunk = None
+  start_index = 0
+  for d in iterator:
+    if current_chunk is None: current_chunk = np.empty((chunksize,)+d.shape[1:], dtype=d.dtype)
+
+    while True:
+      if start_index+d.shape[0]>=chunksize:
+        current_chunk[start_index:] = d[:chunksize-start_index,...]
+        d = d[chunksize-start_index:,...]
+        print("yield", current_chunk.shape, np.mean(current_chunk))
+        yield current_chunk
+        current_chunk = np.empty((chunksize,)+d.shape[1:], dtype=d.dtype)
+        start_index = 0
+      else:
+        current_chunk[start_index:start_index+d.shape[0]] = d
+        start_index += d.shape[0]
+        break
