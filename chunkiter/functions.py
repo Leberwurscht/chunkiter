@@ -26,13 +26,19 @@ class IterableH5Chunks(object):
     self.identifier = multihash(filename, name)
     self.chunksize = chunksize
 
+    datafile = tables.open_file(self.filename, "r")
+    array = datafile.root[self.name]
+    self.shape = array.shape
+    self.chunksize = chunksize if chunksize is not None else array.chunkshape[0]
+    datafile.close()
+
   def __iter__(self):
     datafile = tables.open_file(self.filename, "r")
     array = datafile.root[self.name]
     size = self.chunksize if self.chunksize is not None else array.chunkshape[0]
 
-    for startindex in range(0, array.shape[0], size):
-      yield array[startindex:startindex+size,...]
+    for startindex in range(0, self.shape[0], self.chunksize):
+      yield array[startindex:startindex+self.chunksize,...]
 
     datafile.close()
 
