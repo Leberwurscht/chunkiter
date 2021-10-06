@@ -184,12 +184,16 @@ def rechunk(iterator, chunksize):
 
     while True:
       if start_index+d.shape[0]>=chunksize:
+        # chunk to be yielded gets full
         current_chunk[start_index:] = d[:chunksize-start_index,...]
         d = d[chunksize-start_index:,...]
         yield current_chunk
         current_chunk = np.empty((chunksize,)+d.shape[1:], dtype=d.dtype)
         start_index = 0
       else:
+        # chunk to be yielded does not get full
         current_chunk[start_index:start_index+d.shape[0]] = d
         start_index += d.shape[0]
         break
+
+  if start_index!=0: yield current_chunk[:start_index]
