@@ -117,7 +117,8 @@ def array_from_h5(filename, name):
   datafile.close()
   return data
 
-def cache(iterator, identifier, *input_identifiers, active=True, cachedir="cache", verbose=True):
+default_cachedir = "cache"
+def cache(iterator, identifier, *input_identifiers, active=True, cachedir=None, verbose=True):
   # TO DO: handle iterators of tuples
 
   if type(identifier)==tuple: identifier, version = identifier
@@ -129,6 +130,7 @@ def cache(iterator, identifier, *input_identifiers, active=True, cachedir="cache
     input_identifier = "0"
 
   filename = identifier+"."+version+"."+input_identifier+".h5"
+  cachedir = cachedir if cachedir is not None else default_cachedir
   path = os.path.join(cachedir, filename)
 
   # handle active=False - just pass through the iterator, but with an identifier attached
