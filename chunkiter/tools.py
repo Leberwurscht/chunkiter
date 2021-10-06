@@ -26,7 +26,7 @@ def unwrap(iterator):
 
   for d in iterator:
     if switchover is None:
-      switchover = np.zeros_like(d[:2,...])
+      switchover = np.zeros((2,)+d.shape[1:], dtype=d.dtype)
       switchover[0,...] = d[0,...]
 
     switchover[1,...] = d[0,...]
