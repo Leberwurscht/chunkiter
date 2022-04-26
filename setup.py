@@ -3,9 +3,12 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("VERSION", "r") as fh:
+    version = fh.read().strip()
+
 setuptools.setup(
     name="chunkiter",
-    version="0.0.1.dev1",
+    version=version,
     author="Leberwurscht",
     author_email="leberwurscht@hoegners.de",
     description="A simple approach and library for doing numpy computations with larger-than-memory data.",
