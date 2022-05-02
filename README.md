@@ -17,7 +17,7 @@ array = tables.open_file("test.h5", "r").root["data"][...]
 array_transformed = np.fft.fft(array, axis=1)
 ```
 
-But if the array does not fit into memory this will fail. But you can use python generator expressions nicely to go through the array in chunks of 1024x8192 (130 MB):
+If the array does not fit into memory, this will fail. However, you can use python generator expressions nicely to go through the array in chunks of 1024x8192 (130 MB):
 
 ```python
 import numpy as np
@@ -39,7 +39,7 @@ The trick here is that generator expressions are evaluated lazily, so at no time
 The chunkiter module helps you here with two functions, chunkiter.sliceiter for dividing the large file, and `chunkiter.chunks_to_h5`
 for saving a generator expression to an HDF5 file.
 
-For optimum performance, the input file test.h5 should use Blosc compression and an chunking.
+For optimum performance, the input file test.h5 should use Blosc compression and chunking.
 The recommended way of using `chunkiter` is to have the chunkshape in the generator expressions (here, 1024x8192) agree with the chunkshape of the input HDF5 file.
 If this is the case, you can just use `chunkiter.IterableH5Chunks` for loading the data:
 
@@ -98,7 +98,7 @@ array_transformed = chunkiter.cache((np.fft.fft(array_chunk, axis=1) for array_c
 
 # do other stuff
 array_transformed_half = chunkiter.cache((array_transformed_chunk/2 for array_transformed_chunk in array_transformed), "half", array_transformed.identity)
-array_transformed_double = chunkiter.cache((array_transformed_chunk*2 for array_transformed_chunk in array_transformed), "half", array_transformed.identity)
+array_transformed_double = chunkiter.cache((array_transformed_chunk*2 for array_transformed_chunk in array_transformed), "double", array_transformed.identity)
 
 # save result to output.h5
 chunkiter.chunks_to_h5(array_transformed_half, "output1.h5")
