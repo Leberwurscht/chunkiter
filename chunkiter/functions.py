@@ -120,7 +120,7 @@ def array_from_h5(filename, name):
   return data
 
 default_cachedir = "cache"
-def cache(iterator, identifier, *input_identifiers, active=True, cachedir=None, verbose=True, yield_chunks=False):
+def cache(iterator, identifier, *input_identifiers, active=True, cachedir=None, verbose=True):
   # TO DO: handle iterators of tuples
 
   if type(identifier)==tuple: identifier, version = identifier
@@ -168,10 +168,7 @@ def cache(iterator, identifier, *input_identifiers, active=True, cachedir=None, 
   os.makedirs(cachedir, exist_ok=True)
   t_start = time.time()
 
-  if yield_chunks:
-    for chunk, in chunks_to_h5(iterator, path, verbose=verbose, yield_chunks=True):
-      yield chunk
-  else: chunks_to_h5(iterator, path, verbose=verbose)
+  chunks_to_h5(iterator, path, verbose=verbose)
 
   t_total = time.time() - t_start
   array_to_h5(path, "_computation_time", np.array([t_total]))
@@ -181,7 +178,7 @@ def cache(iterator, identifier, *input_identifiers, active=True, cachedir=None, 
     print("*"*80)
     print()
 
-  if not yield_chunks: return IterableH5Chunks(path, "data0")
+  return IterableH5Chunks(path, "data0")
 
 def rechunk(iterator, chunksize):
   current_chunk = None

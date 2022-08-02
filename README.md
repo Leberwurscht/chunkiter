@@ -36,7 +36,7 @@ chunkiter.chunks_to_h5(array_transformed, "output.h5")
 ```
 
 The trick here is that generator expressions are evaluated lazily, so at no time will all the data be in memory simultaneously.
-The chunkiter module helps you here with two functions, chunkiter.sliceiter for dividing the large file, and `chunkiter.chunks_to_h5`
+The chunkiter module helps you here with two functions, `chunkiter.sliceiter` for dividing the large file, and `chunkiter.chunks_to_h5`
 for saving a generator expression to an HDF5 file.
 
 For optimum performance, the input file test.h5 should use Blosc compression and chunking.
