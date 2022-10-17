@@ -102,8 +102,8 @@ def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=Fals
           datafile.create_earray(datafile.root, n, atom=atom, shape=shape, chunkshape=v.shape, expectedrows=expectedchunks*v.shape[0], filters=filters)
           datasets.append(datafile.root[n])
 
-    for d,v in zip(datasets, data):
-      d.append(v)
+      for d,v in zip(datasets, data):
+        d.append(v)
 
     if yield_chunks: yield data_original
 
