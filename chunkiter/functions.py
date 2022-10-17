@@ -53,7 +53,7 @@ class IdentifierIterator(object):
   def __next__(self):
     return next(self.iterator)
 
-def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=False, yield_chunks=False):
+def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=False, yield_chunks=False, preprocessor=None):
   filters = tables.Filters(complevel=5, complib='blosc:lz4')
 
   filenames = filename if type(filename)==tuple else (filename,)
@@ -73,6 +73,9 @@ def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=Fals
 
   for chunk_i,data in enumerate(iterator):
     if not type(data)==tuple: data = (data,)
+
+    data_original = data
+    if preprocessor is not None: data = preprocessor(data)
 
     if len(filenames)==1 and len(data)>1: filenames = filenames*len(data)
     if len(names)==1 and len(data)>1: names = names*len(data)
@@ -101,7 +104,7 @@ def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=Fals
     for d,v in zip(datasets, data):
       d.append(v)
 
-    if yield_chunks: yield data
+    if yield_chunks: yield data_original
 
   if verbose: print()
 
