@@ -53,7 +53,7 @@ class IdentifierIterator(object):
   def __next__(self):
     return next(self.iterator)
 
-def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=False, yield_chunks=False, preprocessor=None):
+def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=False, yield_chunks=False, preprocessor=None, skip=1):
   filters = tables.Filters(complevel=5, complib='blosc:lz4')
 
   filenames = filename if type(filename)==tuple else (filename,)
@@ -80,26 +80,27 @@ def chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=Fals
     if len(filenames)==1 and len(data)>1: filenames = filenames*len(data)
     if len(names)==1 and len(data)>1: names = names*len(data)
 
-    if verbose: print("* ...writing chunk {}".format(chunk_i), end="\r")
+    if chunk_i%skip==0:
+      if verbose: print("* ...writing chunk {}".format(chunk_i), end="\r")
 
-    # initialize datasets
-    if not len(datasets):
-      occupied = []
-      for fn,n,v in zip(filenames, names, data):
-        if n is None:
-          n = "data{}".format(unnamed_counter[fn])
-          unnamed_counter[fn] += 1
+      # initialize datasets
+      if not len(datasets):
+        occupied = []
+        for fn,n,v in zip(filenames, names, data):
+          if n is None:
+            n = "data{}".format(unnamed_counter[fn])
+            unnamed_counter[fn] += 1
 
-        if (fn,n) in occupied: raise ValueError("conflict: tried to write twice to dataset {} in filename {}".format(n,fn))
-        occupied.append((fn,n))
+          if (fn,n) in occupied: raise ValueError("conflict: tried to write twice to dataset {} in filename {}".format(n,fn))
+          occupied.append((fn,n))
 
-        datafile = tables.open_file(fn, "a")
-        datafiles.append(datafile)
-        if n in datafile.root: raise IOError("{} in {} already contains data".format(n, fn))
-        atom = tables.Atom.from_dtype(v.dtype)
-        shape = (0,)+v.shape[1:]
-        datafile.create_earray(datafile.root, n, atom=atom, shape=shape, chunkshape=v.shape, expectedrows=expectedchunks*v.shape[0], filters=filters)
-        datasets.append(datafile.root[n])
+          datafile = tables.open_file(fn, "a")
+          datafiles.append(datafile)
+          if n in datafile.root: raise IOError("{} in {} already contains data".format(n, fn))
+          atom = tables.Atom.from_dtype(v.dtype)
+          shape = (0,)+v.shape[1:]
+          datafile.create_earray(datafile.root, n, atom=atom, shape=shape, chunkshape=v.shape, expectedrows=expectedchunks*v.shape[0], filters=filters)
+          datasets.append(datafile.root[n])
 
     for d,v in zip(datasets, data):
       d.append(v)
