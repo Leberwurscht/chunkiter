@@ -72,10 +72,10 @@ def yielding_chunks_to_h5(iterator, filename, name=None, expectedchunks=128, ver
   datasets = []
 
   for chunk_i,data in enumerate(iterator):
-    if not type(data)==tuple: data = (data,)
-
     data_original = data
     if preprocessor is not None: data = preprocessor(data)
+
+    if not type(data)==tuple: data = (data,)
 
     if len(filenames)==1 and len(data)>1: filenames = filenames*len(data)
     if len(names)==1 and len(data)>1: names = names*len(data)
