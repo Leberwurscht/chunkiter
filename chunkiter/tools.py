@@ -1,8 +1,9 @@
-import itertools
+import itertools, uuid
 
 import numpy as np
+import scipy.signal
 
-from .functions import rechunk
+from .functions import rechunk, cache
 
 def mean(iterator):
   # np.mean along first dimension of a chunk iterator
@@ -69,3 +70,26 @@ def batchavg(iterator, batchsize, chunksize=None, allow_remainder=False):
     iterator = itertools.chain([first], iterator)
 
   yield from rechunk(_batchavg(iterator, batchsize, allow_remainder), chunksize)
+
+def linspace(start, stop, points, chunksize, endpoint=True):
+  if endpoint: diff = (stop-start)/(points-1)
+  else: diff = (stop-start)/points
+
+  yielded_points = 0
+  while yielded_points<points:
+    chunk = np.arange(min(chunksize,points-yielded_points))*diff + start
+    yield chunk
+    yielded_points += chunk.size
+    start = chunk[-1] + diff
+
+def sosfilt(sos, iterator):
+  z = np.zeros((sos.shape[0], 2))
+  for chunk in iterator:
+    output_chunk, z = scipy.signal.sosfilt(sos, chunk, zi=z)
+    yield output_chunk
+
+def sosfiltfilt(sos, iterator):
+  identifier = iterator.identifier if hasattr(iterator, "identifier") else str(uuid.uuid4())
+  filt1 = cache(sosfilt(sos, iterator), "sosfiltfilt", "filt1", identifier)
+  filt2 = reversed(cache(sosfilt(sos,reversed(filt1)), "sosfiltfilt", "filt2", identifier))
+  return filt2

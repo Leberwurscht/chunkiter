@@ -20,15 +20,17 @@ def multihash(*args, binary=False):
   else: return h.hexdigest()
 
 class IterableH5Chunks(object):
-  def __init__(self, filename, name, chunksize=None):
+  def __init__(self, filename, name, chunksize=None, reverse=False):
     self.filename = filename
     self.name = name
     self.identifier = multihash(filename, name, str(chunksize))
     self.chunksize = chunksize
+    self.reverse = reverse
 
     datafile = tables.open_file(self.filename, "r")
     array = datafile.root[self.name]
     self.shape = array.shape
+    self.size = int(np.prod(self.shape))
     self.chunksize = chunksize if chunksize is not None else array.chunkshape[0]
     datafile.close()
 
@@ -37,10 +39,17 @@ class IterableH5Chunks(object):
     array = datafile.root[self.name]
     size = self.chunksize if self.chunksize is not None else array.chunkshape[0]
 
-    for startindex in range(0, self.shape[0], self.chunksize):
-      yield array[startindex:startindex+self.chunksize,...]
+    if self.reverse:
+      for startindex in reversed(range(0, self.shape[0], self.chunksize)):
+        yield array[startindex:startindex+self.chunksize,...][::-1,...]
+    else:
+      for startindex in range(0, self.shape[0], self.chunksize):
+        yield array[startindex:startindex+self.chunksize,...]
 
     datafile.close()
+
+  def __reversed__(self):
+    return IterableH5Chunks(self.filename, self.name, self.chunksize, not self.reverse)
 
 class IdentifierIterator(object):
   def __init__(self, iterator, *identifiers):
