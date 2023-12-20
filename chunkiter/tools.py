@@ -93,3 +93,8 @@ def sosfiltfilt(sos, iterator):
   filt1 = cache(sosfilt(sos, iterator), "sosfiltfilt", "filt1", identifier)
   filt2 = reversed(cache(sosfilt(sos,reversed(filt1)), "sosfiltfilt", "filt2", identifier))
   return filt2
+
+def peek(iterator):
+  first = next(iterator)
+  iterator = itertools.chain([peek], iterator)
+  return first, iterator
