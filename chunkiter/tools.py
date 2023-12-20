@@ -96,5 +96,5 @@ def sosfiltfilt(sos, iterator):
 
 def peek(iterator):
   first = next(iterator)
-  iterator = itertools.chain([peek], iterator)
+  iterator = itertools.chain([first], iterator)
   return first, iterator
