@@ -149,7 +149,6 @@ def yielding_chunks_to_h5(iterator, filename, name=None, expectedchunks=128, ver
           atom = tables.Atom.from_dtype(v.dtype)
           shape = (0,)+v.shape[1:]
           datafile.create_earray(datafile.root, n, atom=atom, shape=shape, chunkshape=v.shape, expectedrows=expectedchunks*v.shape[0], filters=filters)
-          print(n, "created")
           datasets.append(datafile.root[n])
 
       for d,v in zip(datasets, data):
