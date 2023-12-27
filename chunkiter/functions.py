@@ -255,3 +255,95 @@ def rechunk(iterator, chunksize):
         break
 
   if start_index!=0: yield current_chunk[:start_index]
+
+###
+
+def normalize_bodyfun(bodyfun):
+  if getattr(bodyfun, "has_counter", False):
+    bodyfun_with_counter = bodyfun
+  else:
+    bodyfun_with_counter = lambda chunk_i,*args,**kwargs: bodyfun(*args,**kwargs)
+
+  if getattr(bodyfun, "has_carry", False):
+    bodyfun_with_counter_and_carry = bodyfun_with_counter
+  else:
+    bodyfun_with_counter_and_carry = lambda chunk_i,chunk,carry=None: (bodyfun_with_counter(chunk_i,chunk), None)
+
+  if hasattr(bodyfun, "initial_carry"):
+    bodyfun_with_counter_and_carry.initial_carry = bodyfun.initial_carry
+
+  bodyfun_with_counter_and_carry.has_counter = True
+  bodyfun_with_counter_and_carry.has_carry = True
+
+  return bodyfun_with_counter_and_carry
+
+def apply(bodyfun, iterator, yield_carry=False):
+  """
+    Applies callback function `bodyfun` on each entry of a an iterator.
+    The signature of the callback is bodyfun(chunk)->chunk.
+    If bodyfun.has_carry is set to True, it is bodyfun(chunk,carry)->(chunk,carry),
+    where the argument carry is set to the returned carry of the last iteration.
+    For the first iteration, the carry argument is set to None, or, if provided,
+    to bodyfun.initial_carry.
+    If bodyfun_has_counter is set to True, the signature of bodyfun has an additional
+    argument in the first position, which passes the iteration number.
+  """
+  bodyfun = normalize_bodyfun(bodyfun)
+
+  carry = None
+  for chunk_i, chunk in enumerate(iterator):
+    if chunk_i==0:
+      if hasattr(bodyfun, "initial_carry"): chunk, carry = bodyfun(chunk_i, chunk, bodyfun.initial_carry)
+      else: chunk, carry = bodyfun(chunk_i, chunk)
+    else:
+      chunk, carry = bodyfun(chunk_i, chunk, carry)
+
+    yield (chunk, carry) if yield_carry else chunk
+
+def chain(*bodyfuns):
+  """
+    Returns a new bodyfun for `apply` resulting from the sequential application of
+    the bodyfuns passed as arguments.
+  """
+
+  bodyfuns = [normalize_bodyfun(bodyfun) for bodyfun in bodyfuns]
+  initial_carry = [getattr(bodyfun, "initial_carry", None) for bodyfun in bodyfuns]
+
+  def bodyfun(chunk_i, chunk, carry=initial_carry):
+    new_carries = []
+    for bodyfun,carry_ in zip(bodyfuns,carry):
+      chunk, carry = bodyfun(chunk_i, chunk, carry_)
+      new_carries.append(carry)
+
+    return chunk, new_carries
+
+  bodyfun.has_carry = True
+  bodyfun.has_counter = True
+  bodyfun.initial_carry = initial_carry
+
+  return bodyfun
+
+def per_entry(*bodyfuns):
+  """
+    Returns a new bodyfun for `apply` that processes tuples.
+    Each entry of the tuple is processed be the bodyfuns passed as
+    arguments.
+  """
+  bodyfuns = [normalize_bodyfun(bodyfun) for bodyfun in bodyfuns]
+  initial_carry = [getattr(bodyfun, "initial_carry", None) for bodyfun in bodyfuns]
+
+  def bodyfun(chunk_i, chunk, carry=initial_carry):
+    new_chunk = []
+    new_carries = []
+    for bodyfun,chunk_,carry_ in zip(bodyfuns,chunk,carry):
+      chunk__, carry__ = bodyfun(chunk_i, chunk_, carry_)
+      new_chunk.append(chunk__)
+      new_carries.append(carry__)
+
+    return tuple(new_chunk), tuple(new_carries)
+
+  bodyfun.has_carry = True
+  bodyfun.has_counter = True
+  bodyfun.initial_carry = initial_carry
+
+  return bodyfun
