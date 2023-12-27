@@ -42,7 +42,12 @@ def unwrap(iterator):
 
 def concatenate(iterator):
   # convert a chunk iterator to a conventional numpy array by concatenating
-  return np.concatenate(tuple(iterator),axis=0)
+
+  first, iterator = peek(iterator)
+  if type(first)==tuple:
+    return tuple(np.concatenate(arrays,axis=0) for arrays in zip(*iterator))
+  else:
+    return np.concatenate(tuple(iterator),axis=0)
 
 def _batchavg_chunk(data, batchsize):
   # batchavg for a single chunk
