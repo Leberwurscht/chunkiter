@@ -99,7 +99,11 @@ def sosfiltfilt(sos, iterator):
   filt2 = reversed(cache(sosfilt(sos,reversed(filt1)), "sosfiltfilt", "filt2", identifier))
   return filt2
 
-def peek(iterator):
-  first = next(iterator)
-  iterator = itertools.chain([first], iterator)
-  return first, iterator
+def peek(iterator, N=None):
+  peeker, items = itertools.tee(iterator)
+  return (next(peeker) if N is None else [next(peeker) for i in range(N)]), items
+
+def head(iterator, N):
+  peeker, items = itertools.tee(iterator)
+  rechunked = rechunk(peeker, N)
+  return next(rechunked), items

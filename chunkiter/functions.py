@@ -280,13 +280,14 @@ def normalize_bodyfun(bodyfun):
 def apply(bodyfun, iterator, yield_carry=False):
   """
     Applies callback function `bodyfun` on each entry of a an iterator.
-    The signature of the callback is bodyfun(chunk)->chunk.
-    If bodyfun.has_carry is set to True, it is bodyfun(chunk,carry)->(chunk,carry),
+    The signature of the callback must be bodyfun(chunk)->chunk.
+    If bodyfun.has_carry is set to True, it must be
+      bodyfun(chunk,carry)->(chunk,carry),
     where the argument carry is set to the returned carry of the last iteration.
-    For the first iteration, the carry argument is set to None, or, if provided,
-    to bodyfun.initial_carry.
-    If bodyfun_has_counter is set to True, the signature of bodyfun has an additional
-    argument in the first position, which passes the iteration number.
+    For the first iteration, the carry argument is set to None, or, if set,
+    to bodyfun.initial_carry. If bodyfun.has_counter is set to True, the
+    signature of bodyfun has an additional argument in the first position, which
+    passes the iteration number.
   """
   bodyfun = normalize_bodyfun(bodyfun)
 
@@ -302,8 +303,8 @@ def apply(bodyfun, iterator, yield_carry=False):
 
 def chain(*bodyfuns):
   """
-    Returns a new bodyfun for `apply` resulting from the sequential application of
-    the bodyfuns passed as arguments.
+    Returns a new bodyfun for `apply` resulting from the sequential application
+    of the bodyfuns passed as arguments.
   """
 
   bodyfuns = [normalize_bodyfun(bodyfun) for bodyfun in bodyfuns]
@@ -326,7 +327,7 @@ def chain(*bodyfuns):
 def per_entry(*bodyfuns):
   """
     Returns a new bodyfun for `apply` that processes tuples.
-    Each entry of the tuple is processed be the bodyfuns passed as
+    Each entry of the tuple is processed by the bodyfuns passed as
     arguments.
   """
   bodyfuns = [normalize_bodyfun(bodyfun) for bodyfun in bodyfuns]
