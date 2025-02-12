@@ -107,3 +107,9 @@ def head(iterator, N):
   peeker, items = itertools.tee(iterator)
   rechunked = rechunk(peeker, N)
   return next(rechunked), items
+
+def cumsum(iterator, initial=0):
+  for chunk in iterator:
+    cumulative = np.cumsum(chunk, axis=0) + initial
+    yield cumulative
+    initial = cumulative[-1,...]

@@ -1,4 +1,4 @@
-import os, itertools, traceback, hashlib, time, collections
+import os, itertools, traceback, hashlib, time, collections, uuid
 
 import numpy as np
 import tables
@@ -176,7 +176,12 @@ def array_from_h5(filename, name):
   return data
 
 default_cachedir = "cache"
-def cache(iterator, identifier, *input_identifiers, active=True, cachedir=None, verbose=True):
+def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
+  if len(identifiers):
+    identifier, *input_identifiers = identifiers
+  else:
+    identifier, *input_identifiers = str(uuid.uuid4()), ()
+
   if type(identifier)==tuple: identifier, version = identifier
   else: version = "0"
 
