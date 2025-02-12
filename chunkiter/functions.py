@@ -180,7 +180,7 @@ def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
   if len(identifiers):
     identifier, *input_identifiers = identifiers
   else:
-    identifier, *input_identifiers = str(uuid.uuid4()), ()
+    identifier, *input_identifiers = str(uuid.uuid4()),
 
   if type(identifier)==tuple: identifier, version = identifier
   else: version = "0"
