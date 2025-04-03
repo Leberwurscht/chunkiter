@@ -239,27 +239,67 @@ def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
 
   return IterableH5Chunks(path)
 
-def rechunk(iterator, chunksize):
-  current_chunk = None
-  start_index = 0
-  for d in iterator:
-    if current_chunk is None: current_chunk = np.empty((chunksize,)+d.shape[1:], dtype=d.dtype)
+def pre_rechunk(data, chunk_size, overlap_size=0):
+  """
+  basically, rechunking without the concatenation
+  """
 
-    while True:
-      if start_index+d.shape[0]>=chunksize:
-        # chunk to be yielded gets full
-        current_chunk[start_index:] = d[:chunksize-start_index,...]
-        d = d[chunksize-start_index:,...]
-        yield current_chunk
-        current_chunk = np.empty((chunksize,)+d.shape[1:], dtype=d.dtype)
-        start_index = 0
-      else:
-        # chunk to be yielded does not get full
-        current_chunk[start_index:start_index+d.shape[0]] = d
-        start_index += d.shape[0]
+  if not chunk_size-overlap_size>0: raise ValueError("need chunk_size>overlap_size")
+
+  input_chunks = [next(data)]
+  input_start_i = 0
+  input_stop_i = input_chunks[0].shape[0]
+  output_start_i = 0
+
+  while True:
+    # clean up unneeded input chunks at head
+    while len(input_chunks) and output_start_i>input_start_i+input_chunks[0].shape[0]:
+      input_start_i += input_chunks[0].shape[0]
+      input_chunks.pop(0)
+
+    # extend tail of input chunks as needed
+    while output_start_i+chunk_size>input_stop_i:
+      try:
+        next_chunk = next(data)
+      except StopIteration:
         break
+      input_chunks.append(next_chunk)
+      input_stop_i += input_chunks[-1].shape[0]
 
-  if start_index!=0: yield current_chunk[:start_index]
+    # prepare list of views that can be concatenated
+    ret = []
+    skip = output_start_i-input_start_i
+    N = 0
+    for chunk in input_chunks:
+      # skip beginning to start at output_start_i
+      chunk_relevant = chunk[skip:,...]
+      skip -= chunk.shape[0]-chunk_relevant.shape[0]
+
+      # skip end to get exactly group size
+      chunk_relevant = chunk_relevant[:chunk_size-N,...]
+      N += chunk_relevant.shape[0]
+
+      if chunk_relevant.shape[0]>0: ret.append(chunk_relevant)
+
+    if N==0: break
+
+    yield tuple(ret)
+
+    output_start_i += chunk_size-overlap_size
+
+def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.concatenate):
+  data = pre_rechunk(data, chunk_size, overlap_size)
+
+  for arrays_for_concatenation in data:
+    if padding:
+      actual_size = sum(a.shape[0] for a in arrays_for_concatenation)
+      dtype = arrays_for_concatenation[-1].dtype
+      shape = (chunk_size-actual_size,) + arrays_for_concatenation[-1].shape[1:]
+      arrays_for_concatenation = arrays_for_concatenation + (np.zeros(shape, dtype=dtype),)
+
+      yield actual_size, concatenate(arrays_for_concatenation)
+    else:
+      yield concatenate(arrays_for_concatenation)
 
 ###
 
