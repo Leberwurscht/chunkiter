@@ -272,18 +272,18 @@ def pre_rechunk(data, chunk_size, overlap_size=0):
     N = 0
     for chunk in input_chunks:
       # skip beginning to start at output_start_i
-      chunk_relevant = chunk[skip:,...]
-      skip -= chunk.shape[0]-chunk_relevant.shape[0]
+      chunk_relevantpart = chunk[skip:,...]
+      skip -= chunk.shape[0]-chunk_relevantpart.shape[0]
 
-      # skip end to get exactly group size
-      chunk_relevant = chunk_relevant[:chunk_size-N,...]
-      N += chunk_relevant.shape[0]
+      # skip end to get exactly chunk size
+      chunk_relevantpart = chunk_relevantpart[:chunk_size-N,...]
+      N += chunk_relevantpart.shape[0]
 
-      if chunk_relevant.shape[0]>0: ret.append(chunk_relevant)
+      if chunk_relevantpart.shape[0]>0: ret.append(chunk_relevantpart)
 
-    if N==0: break
+    if N>0: yield tuple(ret)
 
-    yield tuple(ret)
+    if N<chunk_size: break
 
     output_start_i += chunk_size-overlap_size
 
