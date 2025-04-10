@@ -1,4 +1,4 @@
-import os, itertools, traceback, hashlib, time, collections, uuid
+import os, itertools, traceback, hashlib, time, collections, uuid, tempfile
 
 import numpy as np
 import tables
@@ -177,10 +177,14 @@ def array_from_h5(filename, name):
 
 default_cachedir = "cache"
 def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
+  tempdir = None
   if len(identifiers):
     identifier, *input_identifiers = identifiers
   else:
     identifier, *input_identifiers = str(uuid.uuid4()),
+    if cachedir is None:
+      tempdir = tempfile.TemporaryDirectory()
+      cachedir = tempdir.name
 
   if type(identifier)==tuple: identifier, version = identifier
   else: version = "0"
@@ -237,7 +241,10 @@ def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
     print("*"*80)
     print()
 
-  return IterableH5Chunks(path)
+  r = IterableH5Chunks(path)
+  if tempdir is not None: r.__tempdir = tempdir # so that tempdir will not be deleted as long as r exists
+
+  return r
 
 def pre_rechunk(data, chunk_size, overlap_size=0):
   """
