@@ -88,6 +88,30 @@ class IterableH5Chunks(object):
   def __reversed__(self):
     return IterableH5Chunks(self.filename, self.name, self.chunksize, not self.reverse)
 
+class IterableBinaryFileChunks(object):
+  """
+  Iterator from binary format, see yielding_chunks_to_binaryfile (streaming-capable, also over sockets using socket.makefile)
+  """
+
+  def __init__(self, file, identifier=None):
+    self.file = file
+    self.identifier = identifier if identifier is not None else str(uuid.uuid4())
+
+  def __iter__(self):
+    while True:
+      assert self.file.read(5)==b'TUPLE'
+
+      tuple_len = np.empty(1, np.int64)
+      self.file.readinto(tuple_len.view("b").data)
+
+      arrays = []
+      for i in range(tuple_len.item()):
+        arrays.append(deserialize_ndarray(self.file))
+
+      arrays = tuple(arrays)
+
+      yield arrays[0] if len(arrays)==1 else arrays
+
 class IdentifierIterator(object):
   def __init__(self, iterator, *identifiers):
     self.iterator = iterator
@@ -174,6 +198,102 @@ def array_from_h5(filename, name):
   data = datafile.root[name][...]
   datafile.close()
   return data
+
+def serialize_ndarray(array, file):
+  file.write(b'ARRAY')
+
+  typestr = array.dtype.str.encode("ascii")
+  file.write(np.array([len(typestr)], np.int64).view("b").data)
+  file.write(typestr)
+
+  shape = np.array(array.shape, np.int64)
+  file.write(np.array([shape.size], np.int64).view("b").data)
+  file.write(shape.view("b").data)
+
+  file.write(np.ascontiguousarray(array).view("b").data)
+
+def deserialize_ndarray(file, memory_limit=512*1024**2):
+  assert file.read(5)==b'ARRAY'
+
+  typestr_len = np.empty(1, np.int64)
+  file.readinto(typestr_len.view("b").data)
+  assert typestr_len<memory_limit
+
+  typestr = np.empty(typestr_len, np.int8)
+  file.readinto(typestr.view("b").data)
+  typestr = bytes(typestr.view("b").data).decode("ascii")
+
+  shape_len = np.empty(1, np.int64)
+  file.readinto(shape_len.view("b").data)
+  assert shape_len*8<memory_limit
+
+  shape = np.empty(shape_len, np.int64)
+  file.readinto(shape.view("b").data)
+
+  dtype = np.dtype(typestr)
+  totalsize = np.prod(shape)*dtype.itemsize
+  assert totalsize<memory_limit
+
+  array = np.empty(shape, dtype=dtype)
+  file.readinto(array.view("b").data)
+
+  return array
+
+def yielding_chunks_to_binaryfile(iterator, file, verbose=True, preprocessor=None, skip=1):
+  """
+  Write to binary format (streaming-capable, also over sockets using socket.makefile)
+
+  description of the file format:
+    repeating stream of:
+      string 'TUPLE'
+      64-bit integer with number of ndarrays in this tuple
+      repeated (times number of ndarrays in this tuple):
+        string 'ARRAY'
+        64-bit integer with length of the typestr in bytes
+        typestring of this ndarray
+        64-bit integer with number of dimensions of the ndarray
+        sequence of 64-bit integers (length: number of dimensions), indicating shape of array
+        binary version of the array (according to typestr, with C memory order)
+  """
+
+  speed_write = np.nan
+  speed_current = np.nan
+  speed_avg = np.nan
+
+  total_bytes = 0
+  t_start = time.time()
+  t_chunk_start = time.time()
+
+  for data_i,data in enumerate(iterator):
+    data_original = data
+    if preprocessor is not None: data = preprocessor(data)
+
+    if not type(data)==tuple:
+      data = (data,)
+
+    if data_i%skip==0:
+      if verbose: print("* ...writing chunk {}, current {:.2f} MB/s, avg {:.2f} MB/s".format(data_i, speed_current/1024**2, speed_avg/1024**2), end="\r")
+
+      file.write(b'TUPLE')
+      file.write(np.array([len(data)], np.int64).view("b").data)
+
+      chunk_bytes = 0
+      for d in data:
+        serialize_ndarray(d, file)
+        total_bytes += d.nbytes
+        chunk_bytes += d.nbytes
+
+      now = time.time()
+      speed_current = chunk_bytes/(now-t_chunk_start)
+      speed_avg = total_bytes/(now-t_start)
+      t_chunk_start = now
+
+      file.flush()
+
+    yield data_original
+
+def chunks_to_binaryfile(*args, **kwargs):
+  for i in yielding_chunks_to_binaryfile(*args, **kwargs): pass
 
 default_cachedir = "cache"
 def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
