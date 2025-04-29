@@ -94,9 +94,10 @@ def sosfilt(sos, iterator):
     yield output_chunk
 
 def sosfiltfilt(sos, iterator):
-  identifier = iterator.identifier if hasattr(iterator, "identifier") else str(uuid.uuid4())
-  filt1 = cache(sosfilt(sos, iterator), "sosfiltfilt", "filt1", identifier)
-  filt2 = reversed(cache(sosfilt(sos,reversed(filt1)), "sosfiltfilt", "filt2", identifier))
+  identifier = ("sosfiltfilt","filt1",iterator.identifier) if hasattr(iterator, "identifier") else (,)
+  filt1 = cache(sosfilt(sos, iterator), *identifier)
+  identifier = ("sosfiltfilt","filt2",iterator.identifier) if hasattr(iterator, "identifier") else (,)
+  filt2 = reversed(cache(sosfilt(sos,reversed(filt1)), *identifier))
   return filt2
 
 def peek(iterator, N=None):
@@ -113,3 +114,19 @@ def cumsum(iterator, initial=0):
     cumulative = np.cumsum(chunk, axis=0) + initial
     yield cumulative
     initial = cumulative[-1,...]
+
+def add_brownian_noise(iterator, rms, frq_min, frq_max, order=50):
+  """
+  Generate band-limited brownian noise with a certain rms
+  """
+
+  std = np.sqrt( rms**2*(2*np.pi)**2/2/(frq_min**-1-frq_max**-1) )
+
+  iterator, iterator_ = itertools.tee(iterator)
+  white_noise = (np.random.normal(size=chunk.size, scale=std) for chunk in iterator_)
+  brownian_noise = cumsum(white_noise)
+
+  sos = scipy.signal.butter(order, (2*frq_min, 2*frq_max), "bandpass", output="sos")
+  brownian_noise_filtered = sosfilt(sos, brownian_noise)
+
+  yield from (chunk+bn_chunk for chunk,bn_chunk in zip(iterator, brownian_noise_filtered))
