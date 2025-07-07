@@ -104,3 +104,15 @@ array_transformed_double = chunkiter.cache((array_transformed_chunk*2 for array_
 chunkiter.chunks_to_h5(array_transformed_half, "output1.h5")
 chunkiter.chunks_to_h5(array_transformed_double, "output2.h5")
 ```
+
+Installation
+------------
+
+```
+pip3 install git+https://gitlab.com/leberwurscht/chunkiter.git
+```
+
+Note
+-------
+
+This package has an idea/funtionality somewhat overlapping with [npstreams](https://github.com/LaurentRDC/npstreams). As far as I know, npstreams has currently no functions for caching, HDF5 I/O, and rechunking.

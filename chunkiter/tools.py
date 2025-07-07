@@ -94,9 +94,9 @@ def sosfilt(sos, iterator):
     yield output_chunk
 
 def sosfiltfilt(sos, iterator):
-  identifier = ("sosfiltfilt","filt1",iterator.identifier) if hasattr(iterator, "identifier") else (,)
+  identifier = ("sosfiltfilt","filt1",iterator.identifier) if hasattr(iterator, "identifier") else ()
   filt1 = cache(sosfilt(sos, iterator), *identifier)
-  identifier = ("sosfiltfilt","filt2",iterator.identifier) if hasattr(iterator, "identifier") else (,)
+  identifier = ("sosfiltfilt","filt2",iterator.identifier) if hasattr(iterator, "identifier") else ()
   filt2 = reversed(cache(sosfilt(sos,reversed(filt1)), *identifier))
   return filt2
 
