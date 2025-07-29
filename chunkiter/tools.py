@@ -76,6 +76,21 @@ def batchavg(iterator, batchsize, chunksize=None, allow_remainder=False):
 
   yield from rechunk(_batchavg(iterator, batchsize, allow_remainder), chunksize)
 
+def enumerate(iterator):
+  start = 0
+  for chunk in iterator:
+    n = chunk[0].shape[0] if type(chunk)==tuple else chunk.shape[0]
+    counter = np.arange(n) + start
+    yield counter, chunk
+    start += n
+
+def split(iterator):
+  first,iterator = peek(iterator)
+  n = len(first)
+  subiterators = itertools.tee(iterator, n)
+  subiterators = tuple((lambda i: (chunk[i] for chunk in subiterators[i]))(j) for j in range(n))
+  return subiterators
+
 def linspace(start, stop, points, chunksize, endpoint=True):
   if endpoint: diff = (stop-start)/(points-1)
   else: diff = (stop-start)/points
