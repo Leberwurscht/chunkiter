@@ -116,14 +116,16 @@ def sosfiltfilt(sos, iterator):
   return filt2
 
 def peek(iterator, N=None):
+  iterator = iter(iterator)
+
   peeked = []
-  for i in range(N): peeked.append(next(iterator))
+  for i in range(N if N is not None else 1): peeked.append(next(iterator))
 
   def _():
     yield from peeked
     yield from iterator
 
-  return tuple(peeked), _()
+  return peeked[0] if N is None else tuple(peeked), _()
 
 def head(iterator, N=None):
   peeked = []
