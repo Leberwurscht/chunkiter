@@ -1,1 +1,1 @@
-__version__ = "0.0.26" #MARKER#bump-my-version
+__version__ = "0.0.27" #MARKER#bump-my-version
