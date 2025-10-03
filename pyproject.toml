@@ -1,0 +1,22 @@
+[project]
+name = "chunkiter"
+authors = [
+  { name="Leberwurscht", email="leberwurscht@hoegners.de" },
+]
+description = "A simple approach and library for doing numpy computations with larger-than-memory data."
+dependencies = [
+  "numpy",
+  "tables",
+]
+version = "0.0.25" #MARKER#bump-my-version
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://gitlab.com/leberwurscht/chunkiter"

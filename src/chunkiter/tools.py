@@ -116,13 +116,28 @@ def sosfiltfilt(sos, iterator):
   return filt2
 
 def peek(iterator, N=None):
-  peeker, items = itertools.tee(iterator)
-  return (next(peeker) if N is None else [next(peeker) for i in range(N)]), items
+  peeked = []
+  for i in range(N): peeked.append(next(iterator))
 
-def head(iterator, N):
-  peeker, items = itertools.tee(iterator)
-  rechunked = rechunk(peeker, N)
-  return next(rechunked), items
+  def _():
+    yield from peeked
+    yield from iterator
+
+  return tuple(peeked), _()
+
+def head(iterator, N=None):
+  peeked = []
+  n = 0
+  while n<N:
+    chunk = next(iterator)
+    peeked.append(chunk)
+    n += chunk.shape[0]
+
+  def _():
+    yield from peeked
+    yield from iterator
+
+  return concatenate(peeked)[:N,...], _()
 
 def cumsum(iterator, initial=0):
   for chunk in iterator:
