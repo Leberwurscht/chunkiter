@@ -84,10 +84,58 @@ def enumerate(iterator):
     yield counter, chunk
     start += n
 
+
+
+def tee(iterator, n, max_buffer=1):
+  """
+  like itertools.tee, but instead of buffering all the data (and thus filling
+  up RAM) until it is consumed from the returned iterators, it:
+   * only keeps at most `max_buffer` items buffered
+   * when returned iterators are consumed too asynchronously so that buffered
+     data is not sufficient, it will raise an Exception
+   * consequently, when one of the returned iterators is not consumed at all,
+     this will not fill up the RAM
+  """
+
+  buffer = []
+  positions = [0]*n # per-consumer offsets
+  done = False
+
+  def gen(i):
+    nonlocal done
+    pos = positions[i]
+    while True:
+      # need new input?
+      if pos == len(buffer):
+        if done:
+          return
+        try:
+          x = next(iterator)
+        except StopIteration:
+          done = True
+          return
+        buffer.append(x)
+        if len(buffer) > max_buffer:
+          raise Exception("tee buffer overflow")
+
+      # yield current item
+      yield buffer[pos]
+      pos += 1
+      positions[i] = pos
+
+      # drop items all consumers have passed
+      m = min(positions)
+      if m > 0:
+        for j in range(n):
+          positions[j] -= m
+        del buffer[:m]
+
+  return tuple(gen(i) for i in range(n))
+
 def split(iterator):
   first,iterator = peek(iterator)
   n = len(first)
-  subiterators = itertools.tee(iterator, n)
+  subiterators = tee(iterator, n)
   subiterators = tuple((lambda i: (chunk[i] for chunk in subiterators[i]))(j) for j in range(n))
   return subiterators
 
@@ -116,16 +164,8 @@ def sosfiltfilt(sos, iterator):
   return filt2
 
 def peek(iterator, N=None):
-  iterator = iter(iterator)
-
-  peeked = []
-  for i in range(N if N is not None else 1): peeked.append(next(iterator))
-
-  def _():
-    yield from peeked
-    yield from iterator
-
-  return peeked[0] if N is None else tuple(peeked), _()
+  peeker, items = tee(iterator, max_buffer=N)
+  return (next(peeker) if N is None else [next(peeker) for i in range(N)]), items
 
 def head(iterator, N=None):
   peeked = []
