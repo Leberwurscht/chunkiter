@@ -84,9 +84,7 @@ def enumerate(iterator):
     yield counter, chunk
     start += n
 
-
-
-def tee(iterator, n, max_buffer=1):
+def tee(iterator, n=2, max_buffer=1):
   """
   like itertools.tee, but instead of buffering all the data (and thus filling
   up RAM) until it is consumed from the returned iterators, it:
@@ -98,37 +96,55 @@ def tee(iterator, n, max_buffer=1):
   """
 
   buffer = []
-  positions = [0]*n # per-consumer offsets
+  buffer_start = 0
+  next_offsets = [0]*n # per-consumer next offsets to yield
   done = False
 
   def gen(i):
-    nonlocal done
-    pos = positions[i]
+    nonlocal buffer, buffer_start, next_offsets, done
+
     while True:
-      # need new input?
-      if pos == len(buffer):
-        if done:
-          return
+      read_offset = next_offsets[i]
+      buffer_index = read_offset-buffer_start
+#      print("======{}=====".format(i))
+#      print("buffer {}".format(buffer))
+#      print("buffer_start {}".format(buffer_start))
+#      print("next_offsets {}".format(next_offsets))
+#      print("done {}".format(done))
+#      print()
+#      print("read_offset {}".format(read_offset))
+#      print("buffer_index {}".format(buffer_index))
+#      print("buffer length {}".format(len(buffer)))
+
+      # check if buffer needs to be advanced
+      if buffer_index>=len(buffer):
         try:
-          x = next(iterator)
+          item = next(iterator)
         except StopIteration:
           done = True
-          return
-        buffer.append(x)
-        if len(buffer) > max_buffer:
-          raise Exception("tee buffer overflow")
+#          print("DONE")
+        else:
+          buffer_length_before = len(buffer)
+          buffer.append(item)
+          buffer = buffer[-max_buffer:]
+          buffer_length_after = len(buffer)
+          buffer_start += 1 - (buffer_length_after-buffer_length_before)
+          buffer_index = read_offset-buffer_start
+#          print("ADV:")
+#          print("  buffer {}".format(buffer))
+#          print("  buffer_start {}".format(buffer_start))
+#          print("  buffer_index {}".format(buffer_index))
 
-      # yield current item
-      yield buffer[pos]
-      pos += 1
-      positions[i] = pos
+      # get the correct item from the buffer
+      if buffer_index<0:
+        raise Exception("chunkiter.tools.tee buffer exhausted")
 
-      # drop items all consumers have passed
-      m = min(positions)
-      if m > 0:
-        for j in range(n):
-          positions[j] -= m
-        del buffer[:m]
+      if buffer_index>=len(buffer):
+        return
+      else:
+        yield buffer[buffer_index]
+
+      next_offsets[i] += 1
 
   return tuple(gen(i) for i in range(n))
 
