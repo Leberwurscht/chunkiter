@@ -8,7 +8,7 @@ dependencies = [
   "numpy",
   "tables",
 ]
-version = "0.0.29" #MARKER#bump-my-version
+version = "0.0.30" #MARKER#bump-my-version
 classifiers = [
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent",

@@ -180,7 +180,7 @@ def sosfiltfilt(sos, iterator):
   return filt2
 
 def peek(iterator, N=None):
-  peeker, items = tee(iterator, max_buffer=N)
+  peeker, items = tee(iterator, max_buffer=1 if N is None else N)
   return (next(peeker) if N is None else [next(peeker) for i in range(N)]), items
 
 def head(iterator, N=None):
