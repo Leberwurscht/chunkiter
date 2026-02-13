@@ -97,11 +97,13 @@ def tee(iterator, n=2, max_buffer=1):
 
   buffer = []
   buffer_start = 0
-  next_offsets = [0]*n # per-consumer next offsets to yield
+  next_offsets = {} # per-consumer next offsets to yield
   done = False
 
   def gen(i):
     nonlocal buffer, buffer_start, next_offsets, done
+
+    next_offsets[i] = 0
 
     while True:
       read_offset = next_offsets[i]
@@ -146,7 +148,27 @@ def tee(iterator, n=2, max_buffer=1):
 
       next_offsets[i] += 1
 
-  return tuple(gen(i) for i in range(n))
+  def yield_generators():
+    for i in itertools.count():
+      yield gen(i)
+
+  generator_of_generators = yield_generators()
+
+  if n is None:
+    return generator_of_generators
+  else:
+    return tuple(next(generator_of_generators) for i in range(n))
+
+class ReusableGenerator:
+  def __init__(self, generator):
+    self.tee = tee(generator, n=None)
+    self.main = next(self.tee)
+
+  def __iter__(self):
+    return next(self.tee)
+
+  def __next__(self):
+    return next(self.main)
 
 def split(iterator):
   first,iterator = peek(iterator)
