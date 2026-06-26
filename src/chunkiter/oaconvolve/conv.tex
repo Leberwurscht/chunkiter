@@ -1,0 +1,194 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\geometry{margin=2.5cm}
+
+\title{Streaming Overlap--Add and Sparse (Multirate) Convolution}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+This document describes the two streaming convolution algorithms implemented in \texttt{conv.py}:
+\begin{enumerate}
+    \item \textbf{Standard overlap--add convolution} (\texttt{chunked\_oaconvolve\_singlerate}) for a kernel and signal defined at the same sample rate.
+    \item \textbf{Sparse (multirate) convolution} (\texttt{chunked\_oaconvolve}) for a kernel defined at a sample rate a factor $I$ lower than the signal.
+\end{enumerate}
+Both algorithms operate on an infinite data stream using $O(1)$ memory with respect to the stream length.
+
+% ========================================================================
+\section{Standard overlap--add convolution}
+% ========================================================================
+
+Given a discrete-time input signal $x[n]$ and a finite impulse response (FIR) filter $h[k]$ of length $M$, the linear convolution is
+\begin{equation}
+    y[n] = (x * h)[n] = \sum_{k=0}^{M-1} h[k]\, x[n-k] .
+    \label{eq:convolution}
+\end{equation}
+
+For an infinite stream we cannot compute the full convolution at once.  We therefore partition $x$ into contiguous blocks $x_m$ of length $L$:
+\begin{equation}
+    x[n] = \sum_{m} x_m[n - mL], \qquad
+    x_m[r] = x[mL + r], \quad 0 \le r < L .
+\end{equation}
+
+Because convolution is linear and shift--invariant,
+\begin{equation}
+    y[n] = \sum_{m} \bigl(x_m * h\bigr)[n - mL] .
+\end{equation}
+Each block convolution $x_m * h$ has length $L+M-1$.  The tails of length $M-1$ from adjacent blocks overlap and must be added together.  This is the classical \emph{overlap--add} method.
+
+\subsection{Streaming formulation}
+
+Let $y_m = x_m * h$ be the full linear convolution of block $m$ (length $L+M-1$).  Define the overlap buffer $\mathbf{o}_m$ as the tail of $y_m$ that extends past the block boundary:
+\begin{equation}
+    \mathbf{o}_m = y_m[L : L+M-1] .
+\end{equation}
+The output block $m$ consists of the first $L$ samples of $y_m$, but with the tail from the previous block added to the beginning:
+\begin{equation}
+    \boxed{
+        \text{output}_m[r] =
+        \begin{cases}
+            y_m[r] + \mathbf{o}_{m-1}[r], & 0 \le r < M-1, \\[4pt]
+            y_m[r], & M-1 \le r < L .
+        \end{cases}
+    }
+\end{equation}
+After the input stream is exhausted the final overlap buffer $\mathbf{o}_{\text{last}}$ is emitted as the trailing samples.
+
+\subsection{Memory footprint}
+
+The algorithm stores only the current input block ($L$ samples) and the overlap buffer ($M-1$ samples).  Hence the memory consumption is independent of the total stream length:
+\begin{equation}
+    \text{Memory}_{\text{standard}} = O(L + M) .
+\end{equation}
+
+% ========================================================================
+\section{Sparse (multirate) convolution}
+% ========================================================================
+
+Suppose the kernel $h$ is defined at a sample rate $f_{s,h}$ that is a factor $I$ lower than the signal sample rate $f_{s,x}$:
+\begin{equation}
+    I = \frac{f_{s,x}}{f_{s,h}} \in \mathbb{Z}_{>0} .
+\end{equation}
+The naive approach upsamples $h$ by inserting $I-1$ zeros between every pair of coefficients, obtaining the high--rate kernel
+\begin{equation}
+    h_{\uparrow}[n] =
+    \begin{cases}
+        h[n/I], & n \equiv 0 \pmod I, \\
+        0, & \text{otherwise},
+    \end{cases}
+\end{equation}
+whose length is $(M-1)I + 1$.  Applying the standard overlap--add algorithm would require an overlap buffer of $(M-1)I$ samples---prohibitively large when $I$ is large (e.g. $I = 200$).
+
+\subsection{Polyphase decomposition}
+
+A more efficient representation follows from the polyphase decomposition of $h_{\uparrow}$.  Let $p = n \bmod I$ denote the polyphase index.  The $p$-th polyphase component is
+\begin{equation}
+    h_p[r] = h_{\uparrow}[rI + p] .
+\end{equation}
+Because $h_{\uparrow}$ is zero except at multiples of $I$, only the $p=0$ component is non--zero:
+\begin{equation}
+    h_0[r] = h[r], \qquad h_p[r] = 0 \;\text{for}\; p \neq 0 .
+\end{equation}
+
+The convolution of the high--rate signal $x$ with $h_{\uparrow}$ can be written as a sum over phases.  For each output sample $y[n]$, only the phase that aligns with a non--zero tap contributes:
+\begin{equation}
+    y[n] = \sum_{k=0}^{M-1} h[k]\, x[n - kI] .
+    \label{eq:sparse_conv}
+\end{equation}
+Equation~\eqref{eq:sparse_conv} shows that the filter acts on a \emph{downsampled} version of the input, spaced every $I$ samples.  The different phases of the input therefore interact with the filter at different time lags.
+
+\subsection{Polyphase state matrix}
+
+To evaluate \eqref{eq:sparse_conv} in a streaming fashion we maintain a state matrix $\mathbf{S}$ of size $I \times (M-1)$.  Row $p$ of $\mathbf{S}$ stores the $(M-1)$ past input samples for phase $p$:
+\begin{equation}
+    \mathbf{S}[p, j] = x[n_{\text{last}} - jI - p] ,
+    \qquad 0 \le p < I, \; 0 \le j < M-1 ,
+\end{equation}
+where $n_{\text{last}}$ is the most recent sample index that has been processed.
+
+When a new high--rate sample $x[n]$ arrives, its phase is
+\begin{equation}
+    p = n \bmod I .
+\end{equation}
+The contribution of the filter to $y[n]$ is computed from the current state row $\mathbf{S}[p,:]$ and the new sample:
+\begin{equation}
+    y[n] = \underbrace{\mathbf{S}[p,0]}_{\text{past samples}}
+    + h[0]\, x[n] .
+    \label{eq:yn_update}
+\end{equation}
+Afterwards the state row is shifted and updated to include the new sample:
+\begin{align}
+    \mathbf{S}[p, j] &\leftarrow \mathbf{S}[p, j+1] + h[j+1]\, x[n],
+    && 0 \le j < M-2, \\
+    \mathbf{S}[p, M-2] &\leftarrow h[M-1]\, x[n] .
+    \label{eq:state_update}
+\end{align}
+Equations \eqref{eq:yn_update}--\eqref{eq:state_update} are applied independently for every sample.  Because each sample belongs to exactly one phase, the rows of $\mathbf{S}$ evolve independently.
+
+\subsection{Block processing}
+
+In practice the input arrives in fixed--size blocks of length $L$.  For each block we iterate over the samples in order.  An offset variable $o$ tracks the phase of the first sample of the block modulo $I$:
+\begin{equation}
+    o = n_{\text{start}} \bmod I .
+\end{equation}
+After processing a block of length $L$ the offset is updated as
+\begin{equation}
+    o_{\text{new}} = (o + L) \bmod I .
+\end{equation}
+
+When the stream ends, the remaining state matrix must be emitted as a tail of length $(M-1)I$.  The correct ordering is obtained by rolling the rows so that the phase $o$ comes first, then reading out the matrix in column--major (interleaved) order:
+\begin{equation}
+    \text{tail} = \operatorname{vec}\bigl(\operatorname{roll}(\mathbf{S}, -o, \text{axis}=0)^{\mathsf{T}}\bigr) .
+\end{equation}
+
+\subsection{Memory footprint}
+
+The sparse algorithm stores:
+\begin{itemize}
+    \item the original low--rate kernel: $M$ samples,
+    \item the polyphase state matrix: $I(M-1)$ samples,
+    \item the current input/output block: $O(L)$ samples.
+\end{itemize}
+Crucially, the zero--inserted kernel of length $(M-1)I+1$ is \emph{never} materialised.  The memory consumption is therefore
+\begin{equation}
+    \boxed{
+        \text{Memory}_{\text{sparse}} = O\bigl(M + I(M-1) + L\bigr) ,
+    }
+\end{equation}
+which is independent of the stream length and avoids the $O(IM)$ cost of the naive approach.
+
+% ========================================================================
+\section{Summary of algorithmic complexity}
+% ========================================================================
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Aspect} & \textbf{Standard} & \textbf{Sparse} \\
+\midrule
+State memory & $M-1$ & $I(M-1)$ \\
+Kernel storage & $M$ & $M$ \\
+Per--sample ops & $O(M)$ & $O(M)$ \\
+Output delay & $O(L)$ & $O(L)$ \\
+Stream--length memory scaling & $O(1)$ & $O(1)$ \\
+\bottomrule
+\end{tabular}
+\caption{Comparison of the two streaming convolution algorithms.}
+\end{table}
+
+Both algorithms process an infinite stream with constant memory and linear time per sample.  The sparse variant is essential whenever the kernel is defined at a much lower sample rate than the signal.
+
+\end{document}

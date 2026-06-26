@@ -1,0 +1,31 @@
+stages:
+  - build
+  - deploy
+
+build_docs:
+  stage: build
+  image: python:3.11
+  script:
+    - pip install sphinx sphinx-rtd-theme
+    - sphinx-apidoc -o docs/source/api mymodule
+    - make -C docs html
+    - mv docs/build/html public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main
+
+deploy_pages:
+  stage: deploy
+  script:
+    - git config --global user.email "ci@example.com"
+    - git config --global user.name "CI"
+    - git checkout --orphan gh-pages
+    - git rm -rf .
+    - mv public/* .
+    - git add .
+    - git commit -m "Update docs"
+    - git push -f origin gh-pages
+  only:
+    - main

@@ -1,0 +1,9 @@
+src/chunkiter.egg-info
+__pycache__
+docs/build
+src/chunkiter/oaconvolve/conv.aux
+src/chunkiter/oaconvolve/conv.blg
+src/chunkiter/oaconvolve/conv.bbl
+src/chunkiter/oaconvolve/conv.log
+src/chunkiter/oaconvolve/conv.out
+src/chunkiter/oaconvolve/conv.pdf

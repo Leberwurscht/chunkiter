@@ -219,6 +219,13 @@ def head(iterator, N=None):
 
   return concatenate(peeked)[:N,...], _()
 
+def stop_after(iterator, N):
+  while N>0:
+    chunk = next(iterator)
+    r = chunk[:N,...]
+    yield r
+    N = N - r.shape[0]
+
 def cumsum(iterator, initial=0):
   for chunk in iterator:
     cumulative = np.cumsum(chunk, axis=0) + initial
