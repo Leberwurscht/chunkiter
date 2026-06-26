@@ -7,7 +7,7 @@ build_docs:
   image: python:3.11
   script:
     - pip install sphinx sphinx-rtd-theme
-    - sphinx-apidoc -f -o docs/source/api src/modulename
+    - sphinx-apidoc -f -o docs/source/api src/chunkiter
     - make -C docs html
     - mv docs/build/html public
   artifacts:
