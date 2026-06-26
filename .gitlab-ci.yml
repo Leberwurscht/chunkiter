@@ -21,11 +21,12 @@ deploy_pages:
   script:
     - git config --global user.email "ci@example.com"
     - git config --global user.name "CI"
-    - git checkout --orphan gh-pages
+    - git remote set-url origin https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/leberwurscht/chunkiter.git
+    - git checkout gh-pages
     - git rm -rf .
     - mv public/* .
     - git add .
-    - git commit -m "Update docs"
+    - git commit -m "Update docs" || echo "Nothing to commit"
     - git push -f origin gh-pages
   only:
     - master
