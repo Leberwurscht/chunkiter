@@ -4,10 +4,10 @@ stages:
 
 build_docs:
   stage: build
-  image: python:3.12
+  image: python:3.11
   script:
     - pip install sphinx sphinx-rtd-theme
-    -  sphinx-apidoc -o docs/source/api src/chunkiter
+    - sphinx-apidoc -f -o docs/source/api src/modulename
     - make -C docs html
     - mv docs/build/html public
   artifacts:
@@ -16,20 +16,14 @@ build_docs:
   only:
     - master
 
-deploy_pages:
+pages:
   stage: deploy
-  variables:
-    GIT_DEPTH: 0
+  dependencies:
+    - build_docs
   script:
-    - git config --global user.email "ci@example.com"
-    - git config --global user.name "CI"
-    - git remote set-url origin https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/leberwurscht/chunkiter.git
-    - git fetch origin gh-pages
-    - git checkout gh-pages
-    - git rm -rf .
-    - mv public/* .
-    - git add .
-    - git commit -m "Update docs" || echo "Nothing to commit"
-    - git push -f origin gh-pages
+    - echo "Deploying GitLab Pages"
+  artifacts:
+    paths:
+      - public
   only:
     - master
