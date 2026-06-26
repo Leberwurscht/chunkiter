@@ -4,10 +4,10 @@ stages:
 
 build_docs:
   stage: build
-  image: python:3.11
+  image: python:3.12
   script:
     - pip install sphinx sphinx-rtd-theme
-    - sphinx-apidoc -o docs/source/api mymodule
+    -  sphinx-apidoc -o docs/source/api src/chunkiter
     - make -C docs html
     - mv docs/build/html public
   artifacts:

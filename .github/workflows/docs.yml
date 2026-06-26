@@ -16,7 +16,7 @@ jobs:
 
       - name: Generate API docs
         run: |
-          sphinx-apidoc -o docs/source/api mymodule
+          sphinx-apidoc -o docs/source/api src/chunkiter
 
       - name: Build HTML
         run: |
