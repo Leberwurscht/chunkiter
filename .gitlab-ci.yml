@@ -4,7 +4,7 @@ stages:
 
 build_docs:
   stage: build
-  image: python:3.11
+  image: python:3.12
   script:
     - pip install sphinx sphinx-rtd-theme
     - sphinx-apidoc -f -o docs/source/api src/chunkiter
