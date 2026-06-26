@@ -28,4 +28,4 @@ deploy_pages:
     - git commit -m "Update docs"
     - git push -f origin gh-pages
   only:
-    - main
+    - master
