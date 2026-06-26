@@ -18,10 +18,13 @@ build_docs:
 
 deploy_pages:
   stage: deploy
+  variables:
+    GIT_DEPTH: 0
   script:
     - git config --global user.email "ci@example.com"
     - git config --global user.name "CI"
     - git remote set-url origin https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.com/leberwurscht/chunkiter.git
+    - git fetch origin gh-pages
     - git checkout gh-pages
     - git rm -rf .
     - mv public/* .
