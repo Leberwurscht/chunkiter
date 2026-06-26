@@ -14,7 +14,7 @@ build_docs:
     paths:
       - public
   only:
-    - main
+    - master
 
 deploy_pages:
   stage: deploy
