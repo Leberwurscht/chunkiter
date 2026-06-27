@@ -4,7 +4,23 @@ import numpy as np
 import tables
 
 def sliceiter(n, stop):
-  """
+  """Yield ``slice`` objects dividing ``range(stop)`` into chunks of size *n*.
+
+  Useful for slicing large HDF5 datasets chunk-by-chunk::
+
+      dataset = tables.open_file("data.h5").root.data
+      chunks = (dataset[s, ...] for s in chunkiter.sliceiter(1024, dataset.shape[0]))
+
+  Args:
+      n (int): Chunk size.
+      stop (int): Upper bound of the range (exclusive).
+
+  Yields:
+      slice: Slice ``slice(i, i+n)`` for each chunk.
+
+  Example:
+      >>> list(chunkiter.sliceiter(3, 7))
+      [slice(0, 3, None), slice(3, 6, None), slice(6, 7, None)]
   """
   i = 0
   while i<stop:
@@ -22,7 +38,30 @@ def multihash(*args, binary=False):
   else: return h.hexdigest()
 
 class IterableH5Chunks(object):
-  """
+  """Iterable that reads an HDF5 dataset chunk-by-chunk without loading all data into memory.
+
+  Matches the native chunk shape of the HDF5 file by default for optimal
+  I/O performance.  Supports iterating multiple datasets simultaneously
+  (yielding tuples) and reverse iteration.
+
+  Each instance has an ``identifier`` attribute for use with :func:`cache`.
+
+  Args:
+      filename (str): Path to the HDF5 file.
+      name (str, list, None): Dataset name(s).  If ``None``, auto-discovers
+          ``data`` or ``data0``, ``data1``, ... datasets.
+      chunksize (int, None): Override chunk size.  ``None`` uses the file's
+          native chunk size.
+      reverse (bool): If ``True``, iterate in reverse order.
+
+  Yields:
+      np.ndarray or tuple of np.ndarray: Data chunks.
+
+  Example:
+      >>> array = chunkiter.IterableH5Chunks("test.h5", "data")
+      >>> for chunk in array:
+      ...     print(chunk.shape)
+      >>> print(array.identifier)
   """
   def __init__(self, filename, name=None, chunksize=None, reverse=False):
     self.filename = filename
@@ -93,8 +132,24 @@ class IterableH5Chunks(object):
     return IterableH5Chunks(self.filename, self.name, self.chunksize, not self.reverse)
 
 class IterableBinaryFileChunks(object):
-  """
-  Iterator from binary format, see yielding_chunks_to_binaryfile (streaming-capable, also over sockets using socket.makefile)
+  """Iterator reading from binary format (streaming-capable, also over sockets using ``socket.makefile``).
+
+  Reads the format written by :func:`yielding_chunks_to_binaryfile`.
+  Each instance has an ``identifier`` attribute.
+
+  Args:
+      file: A file-like object in binary read mode.
+      identifier (str, optional): Identifier hash.  Auto-generated if not given.
+
+  Yields:
+      np.ndarray or tuple of np.ndarray: Deserialized chunk(s).
+
+  Example:
+      >>> import socket
+      >>> sock = socket.create_connection(("localhost", 12345))
+      >>> chunks = chunkiter.IterableBinaryFileChunks(sock.makefile("rb"))
+      >>> for chunk in chunks:
+      ...     print(chunk.shape)
   """
 
   def __init__(self, file, identifier=None):
@@ -117,7 +172,20 @@ class IterableBinaryFileChunks(object):
       yield arrays[0] if len(arrays)==1 else arrays
 
 class IdentifierIterator(object):
-  """
+  """Iterator wrapper that attaches an ``identifier`` hash attribute.
+
+  Used internally by :func:`cache` when ``active=False``.
+
+  Args:
+      iterator: Any iterator.
+      *identifiers: Values to hash into the identifier.
+
+  Example:
+      >>> it = chunkiter.IdentifierIterator(range(3), "myid")
+      >>> it.identifier
+      '...'
+      >>> list(it)
+      [0, 1, 2]
   """
   def __init__(self, iterator, *identifiers):
     self.iterator = iterator
@@ -130,7 +198,34 @@ class IdentifierIterator(object):
     return next(self.iterator)
 
 def yielding_chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=False, preprocessor=None, skip=1):
-  """
+  """Stream chunks from an iterator to HDF5, yielding data unchanged for further processing.
+
+  This is the streaming variant — each chunk is written and yielded immediately.
+  Use :func:`chunks_to_h5` for the fire-and-forget variant that consumes the
+  entire iterator without yielding.
+
+  Handles single arrays and tuples of arrays, writing to one or multiple files.
+
+  Args:
+      iterator: Iterator yielding ``np.ndarray`` chunks (or tuples thereof).
+      filename (str or tuple): Output HDF5 filename(s).
+      name (str, tuple, None): Dataset name(s).  ``None`` auto-names to ``data``
+          or ``data0``, ``data1``, ...
+      expectedchunks (int): Expected total number of chunks (for HDF5 extent hint).
+      verbose (bool): Print progress.
+      preprocessor (callable, optional): Transformation applied before writing
+          (yielded data is still the original).
+      skip (int): Only write/save every ``skip``-th chunk (1 = every chunk).
+
+  Yields:
+      np.ndarray or tuple of np.ndarray: Original (unprocessed) chunks.
+
+  Example:
+      >>> source = chunkiter.IterableH5Chunks("input.h5", "data")
+      >>> processed = (chunk * 2 for chunk in source)
+      >>> # Write to disk while still being able to further process:
+      >>> saved = chunkiter.yielding_chunks_to_h5(processed, "output.h5")
+      >>> chunkiter.chunks_to_binaryfile(saved, open("output.bin", "wb"))
   """
   filters = tables.Filters(complevel=5, complib='blosc:lz4')
 
@@ -193,12 +288,30 @@ def yielding_chunks_to_h5(iterator, filename, name=None, expectedchunks=128, ver
   for datafile in datafiles: datafile.close()
 
 def chunks_to_h5(*args, **kwargs):
-  """
+  """Consume an iterator and write all chunks to HDF5 (no yielding).
+
+  Convenience wrapper around :func:`yielding_chunks_to_h5` that drains the
+  iterator entirely.  Same parameters.
+
+  Example:
+      >>> source = chunkiter.IterableH5Chunks("input.h5", "data")
+      >>> processed = (chunk * 2 for chunk in source)
+      >>> chunkiter.chunks_to_h5(processed, "output.h5")
   """
   for i in yielding_chunks_to_h5(*args, **kwargs): pass
 
 def array_to_h5(filename, name, data):
-  """
+  """Write a single numpy array to an HDF5 file.
+
+  Args:
+      filename (str): Path to the HDF5 file.
+      name (str): Dataset name inside the file.
+      data (np.ndarray): Array to write.
+
+  Example:
+      >>> chunkiter.array_to_h5("output.h5", "result", np.array([1, 2, 3]))
+      >>> np.allclose(chunkiter.array_from_h5("output.h5", "result"), [1, 2, 3])
+      True
   """
   datafile = tables.open_file(filename, "a")
   if name not in datafile.root: datafile.create_array(datafile.root, name, atom=tables.Atom.from_dtype(data.dtype), shape=data.shape)
@@ -206,7 +319,17 @@ def array_to_h5(filename, name, data):
   datafile.close()
 
 def array_from_h5(filename, name):
-  """
+  """Read a single numpy array from an HDF5 file.
+
+  Args:
+      filename (str): Path to the HDF5 file.
+      name (str): Dataset name inside the file.
+
+  Returns:
+      np.ndarray: The read array.
+
+  Example:
+      >>> data = chunkiter.array_from_h5("input.h5", "metadata")
   """
   datafile = tables.open_file(filename, "r")
   data = datafile.root[name][...]
@@ -254,20 +377,34 @@ def deserialize_ndarray(file, memory_limit=512*1024**2):
   return array
 
 def yielding_chunks_to_binaryfile(iterator, file, verbose=True, preprocessor=None, skip=1):
-  """
-  Write to binary format (streaming-capable, also over sockets using socket.makefile)
+  """Write chunks to a binary file format, yielding data for further streaming.
 
-  description of the file format:
-    repeating stream of:
-      string 'TUPLE'
-      64-bit integer with number of ndarrays in this tuple
-      repeated (times number of ndarrays in this tuple):
-        string 'ARRAY'
-        64-bit integer with length of the typestr in bytes
-        typestring of this ndarray
-        64-bit integer with number of dimensions of the ndarray
-        sequence of 64-bit integers (length: number of dimensions), indicating shape of array
-        binary version of the array (according to typestr, with C memory order)
+  Streaming-capable — can write to sockets via ``socket.makefile``.
+  See :class:`IterableBinaryFileChunks` for reading back.
+
+  The binary format (repeating) consists of:
+
+  - string ``TUPLE``
+  - 64-bit integer: number of ndarrays in this tuple
+  - For each ndarray: string ``ARRAY``, 64-bit integer typestr length,
+    typestring, 64-bit integer ndim, shape (ndim × 64-bit), raw array data (C order)
+
+  Args:
+      iterator: Iterator yielding ``np.ndarray`` chunks (or tuples thereof).
+      file: Writable binary file-like object.
+      verbose (bool): Print progress with throughput.
+      preprocessor (callable, optional): Transform applied before writing
+          (yielded data is still original).
+      skip (int): Only write every ``skip``-th chunk (1 = every chunk).
+
+  Yields:
+      np.ndarray or tuple of np.ndarray: Original chunks, unchanged.
+
+  Example:
+      >>> source = chunkiter.IterableH5Chunks("input.h5", "data")
+      >>> with open("output.bin", "wb") as f:
+      ...     for chunk in chunkiter.yielding_chunks_to_binaryfile(source, f):
+      ...         pass  # chunks are written to disk and can also be processed here
   """
 
   speed_write = np.nan
@@ -307,13 +444,55 @@ def yielding_chunks_to_binaryfile(iterator, file, verbose=True, preprocessor=Non
     yield data_original
 
 def chunks_to_binaryfile(*args, **kwargs):
-  """
+  """Consume an iterator and write all chunks to binary format (no yielding).
+
+  Convenience wrapper around :func:`yielding_chunks_to_binaryfile`.
+  Same parameters.
+
+  Example:
+      >>> source = chunkiter.IterableH5Chunks("input.h5", "data")
+      >>> with open("output.bin", "wb") as f:
+      ...     chunkiter.chunks_to_binaryfile(source, f)
   """
   for i in yielding_chunks_to_binaryfile(*args, **kwargs): pass
 
 default_cachedir = "cache"
 def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
-  """
+  """Cache an iterator's output to disk for repeated consumption.
+
+  Generator expressions can't be rewound — you can't consume the same one
+  twice.  ``cache`` computes the iterator once (writing to HDF5), then returns
+  an :class:`IterableH5Chunks` that can be iterated multiple times.  Subsequent
+  calls with the same identifier skip computation entirely.
+
+  The returned iterable has an ``identifier`` attribute that can be used as
+  input for dependent caches.
+
+  Args:
+      iterator: Any iterator yielding ``np.ndarray`` chunks.
+      *identifiers: Unique identifier(s) for the cached result.  The first
+          identifier can be a ``(name, version)`` tuple for versioned caches.
+          If empty, a random UUID is used with a temporary directory.
+      active (bool): If ``False``, computation is skipped (pass-through with
+          an :class:`IdentifierIterator` wrapper).
+      cachedir (str, optional): Cache directory.  Defaults to ``"cache"``.
+      verbose (bool): Print progress and cache status.
+
+  Returns:
+      :class:`IterableH5Chunks` or :class:`IdentifierIterator`: An iterable
+      reading from the cached HDF5 file, or a pass-through wrapper.
+
+  Example:
+      >>> import numpy as np, chunkiter
+      >>> source = chunkiter.IterableH5Chunks("data.h5", "data")
+      >>> # Computation runs only the first time:
+      >>> fftdata = chunkiter.cache(
+      ...     (np.fft.fft(chunk, axis=1) for chunk in source),
+      ...     "fft", source.identifier
+      ... )
+      >>> # Use result multiple times:
+      >>> half = (c / 2 for c in fftdata)
+      >>> double = (c * 2 for c in fftdata)
   """
   tempdir = None
   if len(identifiers):
@@ -385,7 +564,37 @@ def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
   return r
 
 def pre_rechunk(data, chunk_size, overlap_size=0):
-  # basically, rechunking without the concatenation
+  """Prepare chunk views for rechunking, without concatenating.
+
+  Collects enough input chunks to form output chunks of *chunk_size*,
+  yielding lists of array views ready for concatenation.  When *overlap_size*
+  > 0, each output chunk overlaps the previous one by that many samples.
+
+  Args:
+      data: Iterator yielding np.ndarray chunks (any shape along axis 0).
+      chunk_size (int): Desired output chunk size.
+      overlap_size (int): Number of samples shared between consecutive
+          output chunks.
+
+  Yields:
+      tuple of np.ndarray: Views ready for ``np.concatenate``.
+
+  Raises:
+      ValueError: If chunk_size <= overlap_size.
+
+  Example:
+      >>> import numpy as np
+      >>> source = (np.ones((list(range(1, 6)))) for _ in [1])
+      >>> # Actually use IterableH5Chunks or similar:
+      >>> source = [np.ones((17, 3)), np.ones((17, 3)), np.ones((16, 3))]
+      >>> for views in chunkiter.pre_rechunk(source, 10):
+      ...     print(np.concatenate(views).shape)
+      (10, 3)
+      (10, 3)
+      (10, 3)
+      (10, 3)
+      (10, 3)
+  """
 
   if not chunk_size-overlap_size>0: raise ValueError("need chunk_size>overlap_size")
 
@@ -431,7 +640,37 @@ def pre_rechunk(data, chunk_size, overlap_size=0):
     output_start_i += chunk_size-overlap_size
 
 def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.concatenate):
-  """
+  """Rechunk a stream of array chunks to a different chunk size.
+
+  Collects input chunks and repartitions them into output chunks of equal
+  size *chunk_size*.  Optional overlap between consecutive chunks and
+  zero-padding for the final partial chunk.
+
+  Args:
+      data: Iterator yielding np.ndarray chunks.
+      chunk_size (int): Desired output chunk size along axis 0.
+      overlap_size (int): Number of overlapping samples between consecutive
+          output chunks.
+      padding (bool): If ``True``, the last chunk is zero-padded to
+          *chunk_size* and the return value is ``(actual_size, chunk)``
+          instead of just ``chunk``.
+      concatenate (callable): Function for concatenating array views.
+          Defaults to ``np.concatenate``.
+
+  Yields:
+      np.ndarray or (int, np.ndarray): Rechunked array chunk.  With
+      ``padding=True``, yields ``(actual_size, chunk)`` tuples.
+
+  Example:
+      >>> import numpy as np, chunkiter
+      >>> source = [np.ones((17, 3)), np.ones((17, 3)), np.ones((16, 3))]
+      >>> for chunk in chunkiter.rechunk(source, 10):
+      ...     print(chunk.shape)
+      (10, 3)
+      (10, 3)
+      (10, 3)
+      (10, 3)
+      (10, 3)
   """
   data = pre_rechunk(data, chunk_size, overlap_size)
 
@@ -449,7 +688,23 @@ def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.conc
 ###
 
 def normalize_bodyfun(bodyfun):
-  """
+  """Normalize a callable for use with :func:`apply`, :func:`chain` and :func:`per_entry`.
+
+  Adds counter and carry support to the body function if missing.
+  After normalization the callable has the signature
+  ``(chunk_i, chunk, carry=None) -> (chunk, carry)`` and the attributes
+  ``has_counter`` and ``has_carry`` set to ``True``.
+
+  Args:
+      bodyfun (callable): Raw body function, one of:
+
+          - ``bodyfun(chunk) -> chunk``
+          - ``bodyfun(chunk, carry) -> (chunk, carry)`` (has ``has_carry=True``)
+          - ``bodyfun(chunk_i, chunk) -> chunk`` (has ``has_counter=True``)
+          - ``bodyfun(chunk_i, chunk, carry) -> (chunk, carry)``
+
+  Returns:
+      callable: Normalized body function with full signature and attributes.
   """
   if getattr(bodyfun, "has_counter", False):
     bodyfun_with_counter = bodyfun
@@ -470,16 +725,41 @@ def normalize_bodyfun(bodyfun):
   return bodyfun_with_counter_and_carry
 
 def apply(bodyfun, iterator, yield_carry=False):
-  """
-    Applies callback function `bodyfun` on each entry of a an iterator.
-    The signature of the callback must be bodyfun(chunk)->chunk.
-    If bodyfun.has_carry is set to True, it must be
-      bodyfun(chunk,carry)->(chunk,carry),
-    where the argument carry is set to the returned carry of the last iteration.
-    For the first iteration, the carry argument is set to None, or, if set,
-    to bodyfun.initial_carry. If bodyfun.has_counter is set to True, the
-    signature of bodyfun has an additional argument in the first position, which
-    passes the iteration number.
+  """Apply a callback to every chunk in an iterator.
+
+  The callback can optionally maintain state across chunks via a *carry*
+  value, and can receive the chunk index via a *counter*.
+
+  The body function signature can be any of (see :func:`normalize_bodyfun`):
+
+  * ``bodyfun(chunk) -> chunk``
+  * ``bodyfun(chunk, carry) -> (chunk, carry)``  (set ``has_carry = True``)
+  * ``bodyfun(chunk_i, chunk) -> chunk``  (set ``has_counter = True``)
+  * ``bodyfun(chunk_i, chunk, carry) -> (chunk, carry)``
+
+  The *carry* for the first iteration is ``bodyfun.initial_carry`` (if set)
+  or ``None``.
+
+  Args:
+      bodyfun (callable): Callback (auto-normalized by :func:`normalize_bodyfun`).
+      iterator: Iterator yielding chunks.
+      yield_carry (bool): If ``True``, yield ``(chunk, carry)`` tuples instead
+          of just chunks.
+
+  Yields:
+      np.ndarray or (np.ndarray, object): Processed chunks (optionally with carry).
+
+  Example:
+      >>> import numpy as np
+      >>> # A bodyfun that accumulates a running sum:
+      >>> def running_sum(chunk, carry=0):
+      ...     carry = np.cumsum(chunk, axis=0) + carry
+      ...     return carry, carry[-1]
+      >>> running_sum.has_carry = True
+      >>> running_sum.initial_carry = 0
+      >>> chunks = [np.array([1, 2, 3]), np.array([4, 5, 6])]
+      >>> list(chunkiter.apply(running_sum, chunks))
+      [array([1, 3, 6]), array([10, 15, 21])]
   """
   bodyfun = normalize_bodyfun(bodyfun)
 
@@ -494,9 +774,30 @@ def apply(bodyfun, iterator, yield_carry=False):
     yield (chunk, carry) if yield_carry else chunk
 
 def chain(*bodyfuns):
-  """
-    Returns a new bodyfun for `apply` resulting from the sequential application
-    of the bodyfuns passed as arguments.
+  """Compose multiple body functions for sequential application with :func:`apply`.
+
+  Returns a new bodyfun that passes each chunk through *bodyfuns* in order.
+  Carry values are tracked independently per body function.
+
+  Args:
+      *bodyfuns: Body functions to chain together.
+
+  Returns:
+      callable: A combined body function with ``has_carry`` and ``has_counter``
+      set, suitable for :func:`apply`.
+
+  Example:
+      >>> import numpy as np
+      >>> from chunkiter import chain, apply
+      >>> def scale(chunk, carry):
+      ...     return chunk * 2, carry
+      >>> scale.has_carry = True
+      >>> def add_one(chunk, carry):
+      ...     return chunk + 1, carry
+      >>> add_one.has_carry = True
+      >>> body = chain(scale, add_one)
+      >>> list(apply(body, [np.array([1, 2]), np.array([3, 4])]))
+      [array([3, 5]), array([7, 9])]
   """
 
   bodyfuns = [normalize_bodyfun(bodyfun) for bodyfun in bodyfuns]
@@ -517,10 +818,31 @@ def chain(*bodyfuns):
   return bodyfun
 
 def per_entry(*bodyfuns):
-  """
-    Returns a new bodyfun for `apply` that processes tuples.
-    Each entry of the tuple is processed by the bodyfuns passed as
-    arguments.
+  """Apply different body functions to each entry of tuple chunks.
+
+  When a chunk iterator yields tuples (e.g. ``(data, labels)``), this creates
+  a bodyfun that passes the *i*-th entry to the *i*-th *bodyfuns* argument.
+
+  Args:
+      *bodyfuns: One body function per tuple entry.
+
+  Returns:
+      callable: A combined body function processing tuples, with ``has_carry``
+      and ``has_counter`` set.
+
+  Example:
+      >>> import numpy as np
+      >>> from chunkiter import per_entry, apply
+      >>> def scale(chunk, carry):
+      ...     return chunk * 2, carry
+      >>> scale.has_carry = True
+      >>> def pass_through(chunk, carry):
+      ...     return chunk, carry
+      >>> pass_through.has_carry = True
+      >>> body = per_entry(scale, pass_through)
+      >>> chunks = [(np.array([1, 2]), np.array([7, 8]))]
+      >>> list(apply(body, chunks))
+      [(array([2, 4]), array([7, 8]))]
   """
   bodyfuns = [normalize_bodyfun(bodyfun) for bodyfun in bodyfuns]
   initial_carry = [getattr(bodyfun, "initial_carry", None) for bodyfun in bodyfuns]
