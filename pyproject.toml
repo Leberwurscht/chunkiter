@@ -7,6 +7,7 @@ description = "A simple approach and library for doing numpy computations with l
 dependencies = [
   "numpy",
   "tables",
+  "scipy",
 ]
 version = "0.0.32" #MARKER#bump-my-version
 classifiers = [
