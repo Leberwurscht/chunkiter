@@ -639,7 +639,7 @@ def pre_rechunk(data, chunk_size, overlap_size=0):
 
     output_start_i += chunk_size-overlap_size
 
-def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.concatenate):
+def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.concatenate, yield_remainder=True):
   """Rechunk a stream of array chunks to a different chunk size.
 
   Collects input chunks and repartitions them into output chunks of equal
@@ -656,6 +656,8 @@ def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.conc
           instead of just ``chunk``.
       concatenate (callable): Function for concatenating array views.
           Defaults to ``np.concatenate``.
+      yield_remainder (bool): If ``True`` (default) the last chunk will
+          be returned even if it is smaller than the specificed *chunk_size*.
 
   Yields:
       np.ndarray or (int, np.ndarray): Rechunked array chunk.  With
@@ -681,9 +683,10 @@ def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.conc
       shape = (chunk_size-actual_size,) + arrays_for_concatenation[-1].shape[1:]
       arrays_for_concatenation = arrays_for_concatenation + (np.zeros(shape, dtype=dtype),)
 
-      yield actual_size, concatenate(arrays_for_concatenation)
+      if actual_size==chunk_size or yield_remainder: yield actual_size, concatenate(arrays_for_concatenation)
     else:
-      yield concatenate(arrays_for_concatenation)
+      arr = concatenate(arrays_for_concatenation)
+      if arr.shape[0]==chunk_size or yield_remainder: yield arr
 
 ###
 

@@ -2,6 +2,7 @@ from .functions import *
 from .tools import *
 from .oaconvolve import chunked_oaconvolve as oaconvolve
 from .upfirdn import upfirdn
+from .sliding_window import sliding_window
 
 import types
 

@@ -30,6 +30,19 @@ def mean(iterator):
     n += d.shape[0]
   return s/n
 
+def mix(data, frq, samplerate=1):
+  frequency = (frq*np.ones(chunksize, dtype=float) for i in itertools.count())
+
+  deltat = samplerate**-1
+  last_phase = 0
+
+  for data_chunk in data:
+    relative_phase = np.cumsum(2*np.pi*frq*deltat*np.ones(data_chunk.size))
+    relative_phase -= relative_phase[0]
+    phase = relative_phase + last_phase
+    yield np.angle(np.exp(1j*phase))*data_chunk
+    last_phase = phase[-1]
+
 def sum(iterator):
   """Compute the sum along the first dimension of a chunk iterator.
 
