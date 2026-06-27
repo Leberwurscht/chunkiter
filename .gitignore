@@ -1,7 +1,6 @@
 src/chunkiter.egg-info
 __pycache__
 docs/build
-docs/source/api
 src/chunkiter/oaconvolve/conv.aux
 src/chunkiter/oaconvolve/conv.blg
 src/chunkiter/oaconvolve/conv.bbl

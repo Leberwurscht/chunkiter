@@ -4,6 +4,8 @@ import numpy as np
 import tables
 
 def sliceiter(n, stop):
+  """
+  """
   i = 0
   while i<stop:
     yield slice(i,i+n)
@@ -20,6 +22,8 @@ def multihash(*args, binary=False):
   else: return h.hexdigest()
 
 class IterableH5Chunks(object):
+  """
+  """
   def __init__(self, filename, name=None, chunksize=None, reverse=False):
     self.filename = filename
     self.identifier = multihash(filename, str(type(name)), str(name), str(chunksize), str(reverse))
@@ -113,6 +117,8 @@ class IterableBinaryFileChunks(object):
       yield arrays[0] if len(arrays)==1 else arrays
 
 class IdentifierIterator(object):
+  """
+  """
   def __init__(self, iterator, *identifiers):
     self.iterator = iterator
     self.identifier = multihash(*identifiers)
@@ -124,6 +130,8 @@ class IdentifierIterator(object):
     return next(self.iterator)
 
 def yielding_chunks_to_h5(iterator, filename, name=None, expectedchunks=128, verbose=False, preprocessor=None, skip=1):
+  """
+  """
   filters = tables.Filters(complevel=5, complib='blosc:lz4')
 
   filenames = filename if type(filename)==tuple else (filename,)
@@ -185,15 +193,21 @@ def yielding_chunks_to_h5(iterator, filename, name=None, expectedchunks=128, ver
   for datafile in datafiles: datafile.close()
 
 def chunks_to_h5(*args, **kwargs):
+  """
+  """
   for i in yielding_chunks_to_h5(*args, **kwargs): pass
 
 def array_to_h5(filename, name, data):
+  """
+  """
   datafile = tables.open_file(filename, "a")
   if name not in datafile.root: datafile.create_array(datafile.root, name, atom=tables.Atom.from_dtype(data.dtype), shape=data.shape)
   datafile.root[name][...] = data
   datafile.close()
 
 def array_from_h5(filename, name):
+  """
+  """
   datafile = tables.open_file(filename, "r")
   data = datafile.root[name][...]
   datafile.close()
@@ -293,10 +307,14 @@ def yielding_chunks_to_binaryfile(iterator, file, verbose=True, preprocessor=Non
     yield data_original
 
 def chunks_to_binaryfile(*args, **kwargs):
+  """
+  """
   for i in yielding_chunks_to_binaryfile(*args, **kwargs): pass
 
 default_cachedir = "cache"
 def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
+  """
+  """
   tempdir = None
   if len(identifiers):
     identifier, *input_identifiers = identifiers
@@ -367,9 +385,7 @@ def cache(iterator, *identifiers, active=True, cachedir=None, verbose=True):
   return r
 
 def pre_rechunk(data, chunk_size, overlap_size=0):
-  """
-  basically, rechunking without the concatenation
-  """
+  # basically, rechunking without the concatenation
 
   if not chunk_size-overlap_size>0: raise ValueError("need chunk_size>overlap_size")
 
@@ -415,6 +431,8 @@ def pre_rechunk(data, chunk_size, overlap_size=0):
     output_start_i += chunk_size-overlap_size
 
 def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.concatenate):
+  """
+  """
   data = pre_rechunk(data, chunk_size, overlap_size)
 
   for arrays_for_concatenation in data:
@@ -431,6 +449,8 @@ def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.conc
 ###
 
 def normalize_bodyfun(bodyfun):
+  """
+  """
   if getattr(bodyfun, "has_counter", False):
     bodyfun_with_counter = bodyfun
   else:

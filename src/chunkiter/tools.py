@@ -6,7 +6,7 @@ import scipy.signal
 from .functions import rechunk, cache
 
 def mean(iterator):
-  # np.mean along first dimension of a chunk iterator
+  """ np.mean along first dimension of a chunk iterator """
   s = 0
   n = 0
   for d in iterator:
@@ -15,14 +15,14 @@ def mean(iterator):
   return s/n
 
 def sum(iterator):
-  # np.sum along first dimension of a chunk iterator
+  """ np.sum along first dimension of a chunk iterator """
   s = 0
   for d in iterator:
     s += np.sum(daxis=0)
   return s
 
 def unwrap(iterator):
-  # np.unwrap along first dimension of a chunk iterator
+  """ np.unwrap along first dimension of a chunk iterator """
   switchover = None
 
   for d in iterator:
@@ -41,7 +41,7 @@ def unwrap(iterator):
     switchover[0,...] = d[-1,...]
 
 def concatenate(iterator):
-  # convert a chunk iterator to a conventional numpy array by concatenating
+  """ convert a chunk iterator to a conventional numpy array by concatenating """
 
   first, iterator = peek(iterator)
   if type(first)==tuple:
@@ -67,6 +67,8 @@ def _batchavg(iterator, batchsize, allow_remainder=False):
   if rest.size and not allow_remainder: raise ValueError("batchavg: data left, if ok set allow_remainder=True")
 
 def batchavg(iterator, batchsize, chunksize=None, allow_remainder=False):
+  """
+  """
   iterator = iter(iterator)
 
   if chunksize is None:
@@ -77,6 +79,8 @@ def batchavg(iterator, batchsize, chunksize=None, allow_remainder=False):
   yield from rechunk(_batchavg(iterator, batchsize, allow_remainder), chunksize)
 
 def enumerate(iterator):
+  """
+  """
   start = 0
   for chunk in iterator:
     n = chunk[0].shape[0] if type(chunk)==tuple else chunk.shape[0]
@@ -160,6 +164,8 @@ def tee(iterator, n=2, max_buffer=1):
     return tuple(next(generator_of_generators) for i in range(n))
 
 class ReusableGenerator:
+  """
+  """
   def __init__(self, generator):
     self.tee = tee(generator, n=None)
     self.main = next(self.tee)
@@ -171,6 +177,8 @@ class ReusableGenerator:
     return next(self.main)
 
 def split(iterator):
+  """
+  """
   first,iterator = peek(iterator)
   n = len(first)
   subiterators = tee(iterator, n)
@@ -178,6 +186,8 @@ def split(iterator):
   return subiterators
 
 def linspace(start, stop, points, chunksize, endpoint=True):
+  """
+  """
   if endpoint: diff = (stop-start)/(points-1)
   else: diff = (stop-start)/points
 
@@ -189,12 +199,16 @@ def linspace(start, stop, points, chunksize, endpoint=True):
     start = chunk[-1] + diff
 
 def sosfilt(sos, iterator):
+  """
+  """
   z = np.zeros((sos.shape[0], 2))
   for chunk in iterator:
     output_chunk, z = scipy.signal.sosfilt(sos, chunk, zi=z)
     yield output_chunk
 
 def sosfiltfilt(sos, iterator):
+  """
+  """
   identifier = ("sosfiltfilt","filt1",iterator.identifier) if hasattr(iterator, "identifier") else ()
   filt1 = cache(sosfilt(sos, iterator), *identifier)
   identifier = ("sosfiltfilt","filt2",iterator.identifier) if hasattr(iterator, "identifier") else ()
@@ -202,10 +216,14 @@ def sosfiltfilt(sos, iterator):
   return filt2
 
 def peek(iterator, N=None):
+  """
+  """
   peeker, items = tee(iter(iterator), max_buffer=1 if N is None else N)
   return (next(peeker) if N is None else [next(peeker) for i in range(N)]), items
 
 def head(iterator, N=None):
+  """
+  """
   peeked = []
   n = 0
   while n<N:
@@ -220,6 +238,8 @@ def head(iterator, N=None):
   return concatenate(peeked)[:N,...], _()
 
 def stop_after(iterator, N):
+  """
+  """
   while N>0:
     chunk = next(iterator)
     r = chunk[:N,...]
@@ -227,6 +247,8 @@ def stop_after(iterator, N):
     N = N - r.shape[0]
 
 def cumsum(iterator, initial=0):
+  """
+  """
   for chunk in iterator:
     cumulative = np.cumsum(chunk, axis=0) + initial
     yield cumulative

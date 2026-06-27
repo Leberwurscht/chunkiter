@@ -1,5 +1,7 @@
 A simple approach and library for doing numpy computations with larger-than-memory data.
 
+Documentation: https://leberwurscht.gitlab.io/chunkiter/
+
 Example
 -------
 
