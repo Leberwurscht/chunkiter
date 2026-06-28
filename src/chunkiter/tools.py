@@ -40,8 +40,8 @@ def mix(data, frq, samplerate=1):
     relative_phase = np.cumsum(2*np.pi*frq*deltat*np.ones(data_chunk.size))
     relative_phase -= relative_phase[0]
     phase = relative_phase + last_phase
-    yield np.angle(np.exp(1j*phase))*data_chunk
-    last_phase = phase[-1]
+    yield np.exp(1j*phase)*data_chunk
+    last_phase = np.angle(np.exp(1j*phase[-1]))
 
 def sum(iterator):
   """Compute the sum along the first dimension of a chunk iterator.
