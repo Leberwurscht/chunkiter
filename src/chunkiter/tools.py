@@ -493,6 +493,53 @@ def head(iterator, N=None):
 
   return concatenate(peeked)[:N,...], _()
 
+def start_after(chunks, n, chunk_size="same"):
+  """Drop the first *n* samples from a chunk iterator.
+
+  Args:
+      chunks: Iterator yielding np.ndarray chunks.
+      n (int): Number of samples to drop from the beginning.
+      chunk_size ("same", "const", or int): Output chunk sizing.
+          ``"same"`` (default) preserves input chunk boundaries,
+          merely trimming the leading chunk.
+          ``"const"`` rechunks so every output chunk has the
+          same size as the first input chunk.
+          An integer value is passed directly to
+          :func:`chunkiter.rechunk`.
+
+  Yields:
+      np.ndarray: Chunks with the first *n* samples removed.
+
+  Example:
+      >>> chunks = iter([np.array([1., 2., 3., 4., 5.])])
+      >>> list(_drop_transient(chunks, 2))
+      [array([3., 4., 5.])]
+  """
+  def _trim(src):
+    dropped = 0
+    for chunk in src:
+      if dropped >= n:
+        yield chunk
+      elif dropped + len(chunk) > n:
+        yield chunk[n - dropped:]
+        dropped = n
+      else:
+        dropped += len(chunk)
+
+  if chunk_size == "same":
+    yield from _trim(chunks)
+    return
+
+  chunks, peek = itertools.tee(chunks)
+  try:
+    first = next(peek)
+  except StopIteration:
+    return
+  cs = first.shape[0] if chunk_size == "const" else chunk_size
+
+  yield from rechunk(_trim(chunks), cs)
+
+
 def stop_after(iterator, N):
   """Yield only the first *N* samples from a chunk iterator.
 
