@@ -639,6 +639,9 @@ def pre_rechunk(data, chunk_size, overlap_size=0):
 
     output_start_i += chunk_size-overlap_size
 
+def combine_chunks(data, factor):
+  return (np.concatenate(i,axis=0) for i in itertools.batched(data, factor))
+
 def rechunk(data, chunk_size, overlap_size=0, padding=False, concatenate=np.concatenate, yield_remainder=True):
   """Rechunk a stream of array chunks to a different chunk size.
 

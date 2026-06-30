@@ -59,8 +59,27 @@ def sum(iterator):
   """
   s = 0
   for d in iterator:
-    s += np.sum(daxis=0)
+    s += np.sum(d,axis=0)
   return s
+
+def length(iterator):
+  """Compute the length along the first dimension of a chunk iterator.
+
+  Args:
+      iterator: Iterator yielding np.ndarray chunks.
+
+  Returns:
+      np.ndarray: Element-wise sum along axis 0.
+
+  Example:
+      >>> chunks = [np.array([1., 2.]), np.array([3., 4.])]
+      >>> chunkiter.length(chunks)
+      4
+  """
+  n = 0
+  for d in iterator:
+    n += d.shape[0]
+  return n
 
 def unwrap(iterator):
   """Apply ``np.unwrap`` along the first dimension of a chunk iterator.
@@ -462,15 +481,14 @@ def peek(iterator, N=None):
 def head(iterator, N=None):
   """Extract the first *N* samples from a chunk iterator.
 
-  Returns the concatenated first *N* samples and a fresh iterator that
-  continues from where it left off (including leftover partial chunk data).
+  Returns the concatenated first *N* samples and a unconsumed version of the iterator for further use.
 
   Args:
       iterator: Iterator yielding np.ndarray chunks.
       N (int): Number of samples to extract along axis 0.
 
   Returns:
-      (np.ndarray, iterator): Extracted samples and the continuation iterator.
+      (np.ndarray, iterator): Extracted samples and the unconsumed iterator for further use.
 
   Example:
       >>> chunks = [np.array([1., 2., 3.]), np.array([4., 5., 6.])]
@@ -512,7 +530,7 @@ def start_after(chunks, n, chunk_size="same"):
 
   Example:
       >>> chunks = iter([np.array([1., 2., 3., 4., 5.])])
-      >>> list(_drop_transient(chunks, 2))
+      >>> list(start_after(chunks, 2))
       [array([3., 4., 5.])]
   """
   def _trim(src):
@@ -530,11 +548,7 @@ def start_after(chunks, n, chunk_size="same"):
     yield from _trim(chunks)
     return
 
-  chunks, peek = itertools.tee(chunks)
-  try:
-    first = next(peek)
-  except StopIteration:
-    return
+  peek, chunks = peek(chunks)
   cs = first.shape[0] if chunk_size == "const" else chunk_size
 
   yield from rechunk(_trim(chunks), cs)
@@ -555,8 +569,9 @@ def stop_after(iterator, N):
       >>> list(chunkiter.stop_after(chunks, 4))
       [array([1., 2., 3.]), array([4.])]
   """
-  while N>0:
-    chunk = next(iterator)
+
+  for chunk in iterator:
+    if not N>0: return
     r = chunk[:N,...]
     yield r
     N = N - r.shape[0]
