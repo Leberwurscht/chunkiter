@@ -1,0 +1,1297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; chunkiter  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to Chunkiter’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            chunkiter
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.IdentifierIterator"><code class="docutils literal notranslate"><span class="pre">IdentifierIterator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.IterableBinaryFileChunks"><code class="docutils literal notranslate"><span class="pre">IterableBinaryFileChunks</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.IterableH5Chunks"><code class="docutils literal notranslate"><span class="pre">IterableH5Chunks</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.ReusableGenerator"><code class="docutils literal notranslate"><span class="pre">ReusableGenerator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.add_brownian_noise"><code class="docutils literal notranslate"><span class="pre">add_brownian_noise()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.apply"><code class="docutils literal notranslate"><span class="pre">apply()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.array_from_h5"><code class="docutils literal notranslate"><span class="pre">array_from_h5()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.array_to_h5"><code class="docutils literal notranslate"><span class="pre">array_to_h5()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.batchavg"><code class="docutils literal notranslate"><span class="pre">batchavg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.cache"><code class="docutils literal notranslate"><span class="pre">cache()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.chain"><code class="docutils literal notranslate"><span class="pre">chain()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.chunks_to_binaryfile"><code class="docutils literal notranslate"><span class="pre">chunks_to_binaryfile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.chunks_to_h5"><code class="docutils literal notranslate"><span class="pre">chunks_to_h5()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.concatenate"><code class="docutils literal notranslate"><span class="pre">concatenate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.cumsum"><code class="docutils literal notranslate"><span class="pre">cumsum()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.enumerate"><code class="docutils literal notranslate"><span class="pre">enumerate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.head"><code class="docutils literal notranslate"><span class="pre">head()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.length"><code class="docutils literal notranslate"><span class="pre">length()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.linspace"><code class="docutils literal notranslate"><span class="pre">linspace()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.mean"><code class="docutils literal notranslate"><span class="pre">mean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.normalize_bodyfun"><code class="docutils literal notranslate"><span class="pre">normalize_bodyfun()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.oaconvolve"><code class="docutils literal notranslate"><span class="pre">oaconvolve()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.peek"><code class="docutils literal notranslate"><span class="pre">peek()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.per_entry"><code class="docutils literal notranslate"><span class="pre">per_entry()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.pre_rechunk"><code class="docutils literal notranslate"><span class="pre">pre_rechunk()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.rechunk"><code class="docutils literal notranslate"><span class="pre">rechunk()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.sliceiter"><code class="docutils literal notranslate"><span class="pre">sliceiter()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.sliding_window"><code class="docutils literal notranslate"><span class="pre">sliding_window()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.sosfilt"><code class="docutils literal notranslate"><span class="pre">sosfilt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.sosfiltfilt"><code class="docutils literal notranslate"><span class="pre">sosfiltfilt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.split"><code class="docutils literal notranslate"><span class="pre">split()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.start_after"><code class="docutils literal notranslate"><span class="pre">start_after()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.stop_after"><code class="docutils literal notranslate"><span class="pre">stop_after()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.sum"><code class="docutils literal notranslate"><span class="pre">sum()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.tee"><code class="docutils literal notranslate"><span class="pre">tee()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.unwrap"><code class="docutils literal notranslate"><span class="pre">unwrap()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.upfirdn"><code class="docutils literal notranslate"><span class="pre">upfirdn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.yielding_chunks_to_binaryfile"><code class="docutils literal notranslate"><span class="pre">yielding_chunks_to_binaryfile()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chunkiter.yielding_chunks_to_h5"><code class="docutils literal notranslate"><span class="pre">yielding_chunks_to_h5()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">chunkiter</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-chunkiter">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-chunkiter" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="chunkiter.IdentifierIterator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">IdentifierIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">identifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.IdentifierIterator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Iterator wrapper that attaches an <code class="docutils literal notranslate"><span class="pre">identifier</span></code> hash attribute.</p>
+<p>Used internally by <a class="reference internal" href="#chunkiter.cache" title="chunkiter.cache"><code class="xref py py-func docutils literal notranslate"><span class="pre">cache()</span></code></a> when <code class="docutils literal notranslate"><span class="pre">active=False</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Any iterator.</p></li>
+<li><p><strong>*identifiers</strong> – Values to hash into the identifier.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">it</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IdentifierIterator</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;myid&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">it</span><span class="o">.</span><span class="n">identifier</span>
+<span class="go">&#39;...&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+<span class="go">[0, 1, 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chunkiter.IterableBinaryFileChunks">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">IterableBinaryFileChunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.IterableBinaryFileChunks" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Iterator reading from binary format (streaming-capable, also over sockets using <code class="docutils literal notranslate"><span class="pre">socket.makefile</span></code>).</p>
+<p>Reads the format written by <a class="reference internal" href="#chunkiter.yielding_chunks_to_binaryfile" title="chunkiter.yielding_chunks_to_binaryfile"><code class="xref py py-func docutils literal notranslate"><span class="pre">yielding_chunks_to_binaryfile()</span></code></a>.
+Each instance has an <code class="docutils literal notranslate"><span class="pre">identifier</span></code> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – A file-like object in binary read mode.</p></li>
+<li><p><strong>identifier</strong> (<em>str</em><em>, </em><em>optional</em>) – Identifier hash.  Auto-generated if not given.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or tuple of np.ndarray</em> – Deserialized chunk(s).</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">create_connection</span><span class="p">((</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="mi">12345</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableBinaryFileChunks</span><span class="p">(</span><span class="n">sock</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chunkiter.IterableH5Chunks">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">IterableH5Chunks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.IterableH5Chunks" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Iterable that reads an HDF5 dataset chunk-by-chunk without loading all data into memory.</p>
+<p>Matches the native chunk shape of the HDF5 file by default for optimal
+I/O performance.  Supports iterating multiple datasets simultaneously
+(yielding tuples) and reverse iteration.</p>
+<p>Each instance has an <code class="docutils literal notranslate"><span class="pre">identifier</span></code> attribute for use with <a class="reference internal" href="#chunkiter.cache" title="chunkiter.cache"><code class="xref py py-func docutils literal notranslate"><span class="pre">cache()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Path to the HDF5 file.</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>list</em><em>, </em><em>None</em>) – Dataset name(s).  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, auto-discovers
+<code class="docutils literal notranslate"><span class="pre">data</span></code> or <code class="docutils literal notranslate"><span class="pre">data0</span></code>, <code class="docutils literal notranslate"><span class="pre">data1</span></code>, … datasets.</p></li>
+<li><p><strong>chunksize</strong> (<em>int</em><em>, </em><em>None</em>) – Override chunk size.  <code class="docutils literal notranslate"><span class="pre">None</span></code> uses the file’s
+native chunk size.</p></li>
+<li><p><strong>reverse</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, iterate in reverse order.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or tuple of np.ndarray</em> – Data chunks.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">array</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;test.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">array</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chunkiter.ReusableGenerator">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">ReusableGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.ReusableGenerator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrap an iterator so it can be iterated multiple times.</p>
+<p>Uses <a class="reference internal" href="#chunkiter.tee" title="chunkiter.tee"><code class="xref py py-func docutils literal notranslate"><span class="pre">tee()</span></code></a> to create fresh iterators on demand while keeping
+memory bounded.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>generator</strong> – An iterator or generator.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reusable</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">ReusableGenerator</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">reusable</span><span class="p">)</span>
+<span class="go">[array([1., 2.]), array([3., 4.])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">reusable</span><span class="p">)</span>  <span class="c1"># can iterate again</span>
+<span class="go">[array([1., 2.]), array([3., 4.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.add_brownian_noise">
+<span class="sig-name descname"><span class="pre">add_brownian_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frq_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frq_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.add_brownian_noise" title="Link to this definition"></a></dt>
+<dd><p>Add band-limited Brownian noise to a chunk iterator.</p>
+<p>Generates Brownian noise by integrating white noise, then band-pass
+filters it to the given frequency range.  The noise has the specified RMS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>rms</strong> (<em>float</em>) – Desired RMS amplitude of the noise.</p></li>
+<li><p><strong>frq_min</strong> (<em>float</em>) – Lower cutoff frequency (relative to Nyquist).</p></li>
+<li><p><strong>frq_max</strong> (<em>float</em>) – Upper cutoff frequency (relative to Nyquist).</p></li>
+<li><p><strong>order</strong> (<em>int</em>) – Butterworth filter order.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Chunks with Brownian noise added.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">noisy</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">add_brownian_noise</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="n">rms</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">frq_min</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">frq_max</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">noisy</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(1000,)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodyfun</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yield_carry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.apply" title="Link to this definition"></a></dt>
+<dd><p>Apply a callback to every chunk in an iterator.</p>
+<p>The callback can optionally maintain state across chunks via a <em>carry</em>
+value, and can receive the chunk index via a <em>counter</em>.</p>
+<p>The body function signature can be any of (see <a class="reference internal" href="#chunkiter.normalize_bodyfun" title="chunkiter.normalize_bodyfun"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_bodyfun()</span></code></a>):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk)</span> <span class="pre">-&gt;</span> <span class="pre">chunk</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk,</span> <span class="pre">carry)</span> <span class="pre">-&gt;</span> <span class="pre">(chunk,</span> <span class="pre">carry)</span></code>  (set <code class="docutils literal notranslate"><span class="pre">has_carry</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk_i,</span> <span class="pre">chunk)</span> <span class="pre">-&gt;</span> <span class="pre">chunk</span></code>  (set <code class="docutils literal notranslate"><span class="pre">has_counter</span> <span class="pre">=</span> <span class="pre">True</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk_i,</span> <span class="pre">chunk,</span> <span class="pre">carry)</span> <span class="pre">-&gt;</span> <span class="pre">(chunk,</span> <span class="pre">carry)</span></code></p></li>
+</ul>
+<p>The <em>carry</em> for the first iteration is <code class="docutils literal notranslate"><span class="pre">bodyfun.initial_carry</span></code> (if set)
+or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bodyfun</strong> (<em>callable</em>) – Callback (auto-normalized by <a class="reference internal" href="#chunkiter.normalize_bodyfun" title="chunkiter.normalize_bodyfun"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize_bodyfun()</span></code></a>).</p></li>
+<li><p><strong>iterator</strong> – Iterator yielding chunks.</p></li>
+<li><p><strong>yield_carry</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, yield <code class="docutils literal notranslate"><span class="pre">(chunk,</span> <span class="pre">carry)</span></code> tuples instead
+of just chunks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or (np.ndarray, object)</em> – Processed chunks (optionally with carry).</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># A bodyfun that accumulates a running sum:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">running_sum</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">carry</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">carry</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">carry</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">carry</span><span class="p">,</span> <span class="n">carry</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">running_sum</span><span class="o">.</span><span class="n">has_carry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">running_sum</span><span class="o">.</span><span class="n">initial_carry</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">running_sum</span><span class="p">,</span> <span class="n">chunks</span><span class="p">))</span>
+<span class="go">[array([1, 3, 6]), array([10, 15, 21])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.array_from_h5">
+<span class="sig-name descname"><span class="pre">array_from_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.array_from_h5" title="Link to this definition"></a></dt>
+<dd><p>Read a single numpy array from an HDF5 file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Path to the HDF5 file.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Dataset name inside the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The read array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">array_from_h5</span><span class="p">(</span><span class="s2">&quot;input.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.array_to_h5">
+<span class="sig-name descname"><span class="pre">array_to_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.array_to_h5" title="Link to this definition"></a></dt>
+<dd><p>Write a single numpy array to an HDF5 file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Path to the HDF5 file.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Dataset name inside the file.</p></li>
+<li><p><strong>data</strong> (<em>np.ndarray</em>) – Array to write.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">array_to_h5</span><span class="p">(</span><span class="s2">&quot;output.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">array_from_h5</span><span class="p">(</span><span class="s2">&quot;output.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;result&quot;</span><span class="p">),</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.batchavg">
+<span class="sig-name descname"><span class="pre">batchavg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_remainder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.batchavg" title="Link to this definition"></a></dt>
+<dd><p>Downsample a chunk iterator by computing batch averages.</p>
+<p>Replaces each consecutive group of <em>batchsize</em> samples along axis 0 with
+their mean, then rechunks back to the original chunk size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>batchsize</strong> (<em>int</em>) – Number of samples to average together.</p></li>
+<li><p><strong>chunksize</strong> (<em>int</em><em>, </em><em>optional</em>) – Output chunk size.  Defaults to the chunk
+size of the first input chunk.</p></li>
+<li><p><strong>allow_remainder</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> when the
+total sample count isn’t divisible by <em>batchsize</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Downsampled chunks.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If remainder exists and <em>allow_remainder</em> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">batchavg</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">[array([1.5, 3.5, 5.5])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">identifiers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cachedir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.cache" title="Link to this definition"></a></dt>
+<dd><p>Cache an iterator’s output to disk for repeated consumption.</p>
+<p>Generator expressions can’t be rewound — you can’t consume the same one
+twice.  <code class="docutils literal notranslate"><span class="pre">cache</span></code> computes the iterator once (writing to HDF5), then returns
+an <a class="reference internal" href="#chunkiter.IterableH5Chunks" title="chunkiter.IterableH5Chunks"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterableH5Chunks</span></code></a> that can be iterated multiple times.  Subsequent
+calls with the same identifier skip computation entirely.</p>
+<p>The returned iterable has an <code class="docutils literal notranslate"><span class="pre">identifier</span></code> attribute that can be used as
+input for dependent caches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Any iterator yielding <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> chunks.</p></li>
+<li><p><strong>*identifiers</strong> – Unique identifier(s) for the cached result.  The first
+identifier can be a <code class="docutils literal notranslate"><span class="pre">(name,</span> <span class="pre">version)</span></code> tuple for versioned caches.
+If empty, a random UUID is used with a temporary directory.</p></li>
+<li><p><strong>active</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code>, computation is skipped (pass-through with
+an <a class="reference internal" href="#chunkiter.IdentifierIterator" title="chunkiter.IdentifierIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">IdentifierIterator</span></code></a> wrapper).</p></li>
+<li><p><strong>cachedir</strong> (<em>str</em><em>, </em><em>optional</em>) – Cache directory.  Defaults to <code class="docutils literal notranslate"><span class="pre">&quot;cache&quot;</span></code>.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Print progress and cache status.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An iterable
+reading from the cached HDF5 file, or a pass-through wrapper.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#chunkiter.IterableH5Chunks" title="chunkiter.IterableH5Chunks"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterableH5Chunks</span></code></a> or <a class="reference internal" href="#chunkiter.IdentifierIterator" title="chunkiter.IdentifierIterator"><code class="xref py py-class docutils literal notranslate"><span class="pre">IdentifierIterator</span></code></a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">chunkiter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;data.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Computation runs only the first time:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fftdata</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">cache</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">source</span><span class="p">),</span>
+<span class="gp">... </span>    <span class="s2">&quot;fft&quot;</span><span class="p">,</span> <span class="n">source</span><span class="o">.</span><span class="n">identifier</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Use result multiple times:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">half</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fftdata</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">double</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">fftdata</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.chain">
+<span class="sig-name descname"><span class="pre">chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">bodyfuns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.chain" title="Link to this definition"></a></dt>
+<dd><p>Compose multiple body functions for sequential application with <a class="reference internal" href="#chunkiter.apply" title="chunkiter.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply()</span></code></a>.</p>
+<p>Returns a new bodyfun that passes each chunk through <em>bodyfuns</em> in order.
+Carry values are tracked independently per body function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*bodyfuns</strong> – Body functions to chain together.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A combined body function with <code class="docutils literal notranslate"><span class="pre">has_carry</span></code> and <code class="docutils literal notranslate"><span class="pre">has_counter</span></code>
+set, suitable for <a class="reference internal" href="#chunkiter.apply" title="chunkiter.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply()</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">chunkiter</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">apply</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">chunk</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">carry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span><span class="o">.</span><span class="n">has_carry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_one</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">chunk</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">carry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">add_one</span><span class="o">.</span><span class="n">has_carry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">body</span> <span class="o">=</span> <span class="n">chain</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">add_one</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">apply</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])]))</span>
+<span class="go">[array([3, 5]), array([7, 9])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.chunks_to_binaryfile">
+<span class="sig-name descname"><span class="pre">chunks_to_binaryfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.chunks_to_binaryfile" title="Link to this definition"></a></dt>
+<dd><p>Consume an iterator and write all chunks to binary format (no yielding).</p>
+<p>Convenience wrapper around <a class="reference internal" href="#chunkiter.yielding_chunks_to_binaryfile" title="chunkiter.yielding_chunks_to_binaryfile"><code class="xref py py-func docutils literal notranslate"><span class="pre">yielding_chunks_to_binaryfile()</span></code></a>.
+Same parameters.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;input.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">chunkiter</span><span class="o">.</span><span class="n">chunks_to_binaryfile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.chunks_to_h5">
+<span class="sig-name descname"><span class="pre">chunks_to_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.chunks_to_h5" title="Link to this definition"></a></dt>
+<dd><p>Consume an iterator and write all chunks to HDF5 (no yielding).</p>
+<p>Convenience wrapper around <a class="reference internal" href="#chunkiter.yielding_chunks_to_h5" title="chunkiter.yielding_chunks_to_h5"><code class="xref py py-func docutils literal notranslate"><span class="pre">yielding_chunks_to_h5()</span></code></a> that drains the
+iterator entirely.  Same parameters.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;input.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">processed</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">source</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">chunks_to_h5</span><span class="p">(</span><span class="n">processed</span><span class="p">,</span> <span class="s2">&quot;output.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.concatenate">
+<span class="sig-name descname"><span class="pre">concatenate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.concatenate" title="Link to this definition"></a></dt>
+<dd><p>Concatenate all chunks of an iterator into a single numpy array.</p>
+<p>Loads the entire iterator into memory — only suitable when the total
+data fits in RAM.  For tuple chunks, concatenates each entry separately.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks or tuples thereof.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Fully concatenated data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray or tuple of np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="go">array([[1., 1.],</span>
+<span class="go">       [1., 1.],</span>
+<span class="go">       [1., 1.],</span>
+<span class="go">       [2., 2.],</span>
+<span class="go">       [2., 2.],</span>
+<span class="go">       [2., 2.],</span>
+<span class="go">       [2., 2.]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.cumsum">
+<span class="sig-name descname"><span class="pre">cumsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.cumsum" title="Link to this definition"></a></dt>
+<dd><p>Cumulative sum along the first dimension of a chunk iterator.</p>
+<p>Maintains the running total across chunk boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>initial</strong> (<em>float</em><em> or </em><em>np.ndarray</em>) – Starting value for the cumulative sum.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Cumulative sum chunks.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">chunks</span><span class="p">))</span>
+<span class="go">[array([1., 3.]), array([6., 10.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.enumerate">
+<span class="sig-name descname"><span class="pre">enumerate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.enumerate" title="Link to this definition"></a></dt>
+<dd><p>Enumerate chunks, yielding <code class="docutils literal notranslate"><span class="pre">(counter_array,</span> <span class="pre">chunk)</span></code> pairs.</p>
+<p>Unlike Python’s <code class="docutils literal notranslate"><span class="pre">enumerate</span></code> which yields <code class="docutils literal notranslate"><span class="pre">(int,</span> <span class="pre">chunk)</span></code>, this yields an
+integer array of sample indices matching the chunk’s length, making it
+convenient for per-sample indexing in streaming pipelines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>(np.ndarray, np.ndarray or tuple)</em> – Counter array and the corresponding chunk.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">enumerate</span><span class="p">(</span><span class="n">chunks</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">chunk</span><span class="p">)</span>
+<span class="go">[0 1 2] [1. 1. 1.]</span>
+<span class="go">[3 4] [1. 1.]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.head">
+<span class="sig-name descname"><span class="pre">head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.head" title="Link to this definition"></a></dt>
+<dd><p>Extract the first <em>N</em> samples from a chunk iterator.</p>
+<p>Returns the concatenated first <em>N</em> samples and a unconsumed version of the iterator for further use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>N</strong> (<em>int</em>) – Number of samples to extract along axis 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Extracted samples and the unconsumed iterator for further use.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(np.ndarray, iterator)</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">head</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">chunks</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">head</span>
+<span class="go">array([1., 2., 3., 4.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">rest</span><span class="p">)</span>
+<span class="go">array([5., 6.])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.length" title="Link to this definition"></a></dt>
+<dd><p>Compute the length along the first dimension of a chunk iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Element-wise sum along axis 0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">length</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="go">4</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.linspace">
+<span class="sig-name descname"><span class="pre">linspace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunksize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.linspace" title="Link to this definition"></a></dt>
+<dd><p>Like <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code> but yields chunks instead of a single array.</p>
+<p>Useful for generating large coordinate arrays without holding them all
+in memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>float</em>) – Start value.</p></li>
+<li><p><strong>stop</strong> (<em>float</em>) – End value.</p></li>
+<li><p><strong>points</strong> (<em>int</em>) – Total number of points.</p></li>
+<li><p><strong>chunksize</strong> (<em>int</em>) – Points per yielded chunk.</p></li>
+<li><p><strong>endpoint</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, <em>stop</em> is the last point.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Chunks of the linearly spaced values.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="go">[array([0.  , 0.25, 0.5 ]), array([0.75, 1.  ])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.mean">
+<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.mean" title="Link to this definition"></a></dt>
+<dd><p>Compute the mean along the first dimension of a chunk iterator.</p>
+<p>Accumulates sum and count across chunks without ever holding all data
+in memory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mean along axis 0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="go">3.5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.normalize_bodyfun">
+<span class="sig-name descname"><span class="pre">normalize_bodyfun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodyfun</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.normalize_bodyfun" title="Link to this definition"></a></dt>
+<dd><p>Normalize a callable for use with <a class="reference internal" href="#chunkiter.apply" title="chunkiter.apply"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply()</span></code></a>, <a class="reference internal" href="#chunkiter.chain" title="chunkiter.chain"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain()</span></code></a> and <a class="reference internal" href="#chunkiter.per_entry" title="chunkiter.per_entry"><code class="xref py py-func docutils literal notranslate"><span class="pre">per_entry()</span></code></a>.</p>
+<p>Adds counter and carry support to the body function if missing.
+After normalization the callable has the signature
+<code class="docutils literal notranslate"><span class="pre">(chunk_i,</span> <span class="pre">chunk,</span> <span class="pre">carry=None)</span> <span class="pre">-&gt;</span> <span class="pre">(chunk,</span> <span class="pre">carry)</span></code> and the attributes
+<code class="docutils literal notranslate"><span class="pre">has_counter</span></code> and <code class="docutils literal notranslate"><span class="pre">has_carry</span></code> set to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bodyfun</strong> (<em>callable</em>) – <p>Raw body function, one of:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk)</span> <span class="pre">-&gt;</span> <span class="pre">chunk</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk,</span> <span class="pre">carry)</span> <span class="pre">-&gt;</span> <span class="pre">(chunk,</span> <span class="pre">carry)</span></code> (has <code class="docutils literal notranslate"><span class="pre">has_carry=True</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk_i,</span> <span class="pre">chunk)</span> <span class="pre">-&gt;</span> <span class="pre">chunk</span></code> (has <code class="docutils literal notranslate"><span class="pre">has_counter=True</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bodyfun(chunk_i,</span> <span class="pre">chunk,</span> <span class="pre">carry)</span> <span class="pre">-&gt;</span> <span class="pre">(chunk,</span> <span class="pre">carry)</span></code></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Normalized body function with full signature and attributes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.oaconvolve">
+<span class="sig-name descname"><span class="pre">oaconvolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.oaconvolve" title="Link to this definition"></a></dt>
+<dd><p>Convolve a high-rate stream with a low-rate kernel.</p>
+<p>The kernel is defined at a sample rate <code class="docutils literal notranslate"><span class="pre">factor</span></code> times lower than the
+stream.  The effective high-rate filter is the zero-inserted kernel.
+The implementation stores a polyphase state matrix of
+<code class="docutils literal notranslate"><span class="pre">factor</span> <span class="pre">*</span> <span class="pre">(len(kernel)</span> <span class="pre">-</span> <span class="pre">1)</span></code> samples so that the upsampled kernel
+itself is never materialised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stream</strong> (<em>generator</em><em> of </em><em>np.ndarray</em>) – Yields 1-D input blocks of fixed length at the high sample rate.</p></li>
+<li><p><strong>kernel</strong> (<em>np.ndarray</em>) – 1-D convolution kernel at the low sample rate.</p></li>
+<li><p><strong>factor</strong> (<em>int</em>) – Ratio <code class="docutils literal notranslate"><span class="pre">samplerate(stream)</span> <span class="pre">/</span> <span class="pre">samplerate(kernel)</span></code>.  Must be a
+positive integer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Output blocks at the high sample rate.  Most blocks have the same
+length as the input blocks.  After the stream ends, a final tail
+block of length <code class="docutils literal notranslate"><span class="pre">(len(kernel)</span> <span class="pre">-</span> <span class="pre">1)</span> <span class="pre">*</span> <span class="pre">factor</span></code> is yielded.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.peek">
+<span class="sig-name descname"><span class="pre">peek</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.peek" title="Link to this definition"></a></dt>
+<dd><p>Peek at the first item(s) of an iterator without consuming them.</p>
+<p>Returns the peeked data and a fresh iterator that yields everything
+(including the peeked items).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Source iterator.</p></li>
+<li><p><strong>N</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of items to peek.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, peeks one item.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">(peeked,</span> <span class="pre">rest)</span></code> — the peeked item(s) and a fresh iterator
+over all data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">peek</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">first</span>
+<span class="go">array([1., 2.])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">rest</span><span class="p">)</span>
+<span class="go">[array([1., 2.]), array([3., 4.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.per_entry">
+<span class="sig-name descname"><span class="pre">per_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">bodyfuns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.per_entry" title="Link to this definition"></a></dt>
+<dd><p>Apply different body functions to each entry of tuple chunks.</p>
+<p>When a chunk iterator yields tuples (e.g. <code class="docutils literal notranslate"><span class="pre">(data,</span> <span class="pre">labels)</span></code>), this creates
+a bodyfun that passes the <em>i</em>-th entry to the <em>i</em>-th <em>bodyfuns</em> argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*bodyfuns</strong> – One body function per tuple entry.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A combined body function processing tuples, with <code class="docutils literal notranslate"><span class="pre">has_carry</span></code>
+and <code class="docutils literal notranslate"><span class="pre">has_counter</span></code> set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">chunkiter</span> <span class="kn">import</span> <span class="n">per_entry</span><span class="p">,</span> <span class="n">apply</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">chunk</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">carry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span><span class="o">.</span><span class="n">has_carry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">pass_through</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span> <span class="n">carry</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">chunk</span><span class="p">,</span> <span class="n">carry</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pass_through</span><span class="o">.</span><span class="n">has_carry</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">body</span> <span class="o">=</span> <span class="n">per_entry</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">pass_through</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">]))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">apply</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">chunks</span><span class="p">))</span>
+<span class="go">[(array([2, 4]), array([7, 8]))]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.pre_rechunk">
+<span class="sig-name descname"><span class="pre">pre_rechunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.pre_rechunk" title="Link to this definition"></a></dt>
+<dd><p>Prepare chunk views for rechunking, without concatenating.</p>
+<p>Collects enough input chunks to form output chunks of <em>chunk_size</em>,
+yielding lists of array views ready for concatenation.  When <em>overlap_size</em>
+&gt; 0, each output chunk overlaps the previous one by that many samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Iterator yielding np.ndarray chunks (any shape along axis 0).</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em>) – Desired output chunk size.</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – Number of samples shared between consecutive
+output chunks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>tuple of np.ndarray</em> – Views ready for <code class="docutils literal notranslate"><span class="pre">np.concatenate</span></code>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If chunk_size &lt;= overlap_size.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">))))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Actually use IterableH5Chunks or similar:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">views</span> <span class="ow">in</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">pre_rechunk</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">views</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.rechunk">
+<span class="sig-name descname"><span class="pre">rechunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concatenate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">concatenate&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yield_remainder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.rechunk" title="Link to this definition"></a></dt>
+<dd><p>Rechunk a stream of array chunks to a different chunk size.</p>
+<p>Collects input chunks and repartitions them into output chunks of equal
+size <em>chunk_size</em>.  Optional overlap between consecutive chunks and
+zero-padding for the final partial chunk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>chunk_size</strong> (<em>int</em>) – Desired output chunk size along axis 0.</p></li>
+<li><p><strong>overlap_size</strong> (<em>int</em>) – Number of overlapping samples between consecutive
+output chunks.</p></li>
+<li><p><strong>padding</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the last chunk is zero-padded to
+<em>chunk_size</em> and the return value is <code class="docutils literal notranslate"><span class="pre">(actual_size,</span> <span class="pre">chunk)</span></code>
+instead of just <code class="docutils literal notranslate"><span class="pre">chunk</span></code>.</p></li>
+<li><p><strong>concatenate</strong> (<em>callable</em>) – Function for concatenating array views.
+Defaults to <code class="docutils literal notranslate"><span class="pre">np.concatenate</span></code>.</p></li>
+<li><p><strong>yield_remainder</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default) the last chunk will
+be returned even if it is smaller than the specificed <em>chunk_size</em>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or (int, np.ndarray)</em> – Rechunked array chunk.  With
+<code class="docutils literal notranslate"><span class="pre">padding=True</span></code>, yields <code class="docutils literal notranslate"><span class="pre">(actual_size,</span> <span class="pre">chunk)</span></code> tuples.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">chunkiter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">16</span><span class="p">,</span> <span class="mi">3</span><span class="p">))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">rechunk</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+<span class="go">(10, 3)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.sliceiter">
+<span class="sig-name descname"><span class="pre">sliceiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.sliceiter" title="Link to this definition"></a></dt>
+<dd><p>Yield <code class="docutils literal notranslate"><span class="pre">slice</span></code> objects dividing <code class="docutils literal notranslate"><span class="pre">range(stop)</span></code> into chunks of size <em>n</em>.</p>
+<p>Useful for slicing large HDF5 datasets chunk-by-chunk:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">tables</span><span class="o">.</span><span class="n">open_file</span><span class="p">(</span><span class="s2">&quot;data.h5&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">data</span>
+<span class="n">chunks</span> <span class="o">=</span> <span class="p">(</span><span class="n">dataset</span><span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">sliceiter</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="n">dataset</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> (<em>int</em>) – Chunk size.</p></li>
+<li><p><strong>stop</strong> (<em>int</em>) – Upper bound of the range (exclusive).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>slice</em> – Slice <code class="docutils literal notranslate"><span class="pre">slice(i,</span> <span class="pre">i+n)</span></code> for each chunk.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">sliceiter</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="go">[slice(0, 3, None), slice(3, 6, None), slice(6, 7, None)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.sliding_window">
+<span class="sig-name descname"><span class="pre">sliding_window</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_chunksize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yield_remainder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.sliding_window" title="Link to this definition"></a></dt>
+<dd><p>Extract sliding windows from a stream of 1D ndarray chunks.</p>
+<p>Takes an iterator of 1D ndarrays (a data stream) and yields 2D ndarrays
+where each row is a sliding window over the concatenated input data,
+advancing by <em>step</em> samples between consecutive windows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Iterator yielding 1-D <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> chunks.</p></li>
+<li><p><strong>window</strong> (<em>int</em><em> or </em><em>np.ndarray</em>) – Window size (int) or coefficient array
+applied element-wise to each window.</p></li>
+<li><p><strong>step</strong> (<em>int</em>) – Step size between consecutive windows.</p></li>
+<li><p><strong>output_chunksize</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of windows per output chunk.
+If <code class="docutils literal notranslate"><span class="pre">None</span></code>, chosen to approximately match input chunk memory
+(~1–4 MB).</p></li>
+<li><p><strong>padding</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the last chunk is zero-padded to
+<em>output_chunksize</em> rows.  All chunks are yielded as
+<code class="docutils literal notranslate"><span class="pre">(actual_size,</span> <span class="pre">windows)</span></code> tuples.</p></li>
+<li><p><strong>yield_remainder</strong> (<em>bool</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> (default), the last partial chunk
+is yielded even if it has fewer than <em>output_chunksize</em> windows.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or (int, np.ndarray)</em> – 2-D array of shape
+<code class="docutils literal notranslate"><span class="pre">(n_windows,</span> <span class="pre">window_size)</span></code>.  With <code class="docutils literal notranslate"><span class="pre">padding=True</span></code>, yields
+<code class="docutils literal notranslate"><span class="pre">(actual_n_windows,</span> <span class="pre">windows)</span></code> for every chunk.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If <em>window</em> size or <em>step</em> is less than 1, or if
+    <em>output_chunksize</em> is 0.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">chunkiter.sliding_window</span> <span class="kn">import</span> <span class="n">sliding_window</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">,</span> <span class="mf">7.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">sliding_window</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">output_chunksize</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+<span class="go">[[1. 2. 3.]</span>
+<span class="go"> [3. 4. 5.]]</span>
+<span class="go">[[5. 6. 7.]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.sosfilt">
+<span class="sig-name descname"><span class="pre">sosfilt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.sosfilt" title="Link to this definition"></a></dt>
+<dd><p>Apply an IIR filter (second-order sections) to a chunk iterator.</p>
+<p>Maintains filter state across chunk boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sos</strong> (<em>np.ndarray</em>) – Second-order sections coefficient array.</p></li>
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Filtered chunks.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">butter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sos</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;sos&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">100</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">filtered</span> <span class="ow">in</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">sosfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">chunks</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">filtered</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="go">(100,)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.sosfiltfilt">
+<span class="sig-name descname"><span class="pre">sosfiltfilt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.sosfiltfilt" title="Link to this definition"></a></dt>
+<dd><p>Apply a zero-phase IIR filter (forward-backward) to a chunk iterator.</p>
+<p>Filters the data forward, caches it, then filters the reversed result
+backward to achieve zero phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sos</strong> (<em>np.ndarray</em>) – Second-order sections coefficient array.</p></li>
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks (ideally with an
+<code class="docutils literal notranslate"><span class="pre">identifier</span></code> attribute for caching).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Zero-phase filtered chunk iterable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>iterable</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">butter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sos</span> <span class="o">=</span> <span class="n">butter</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;sos&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;data.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filtered</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">sosfiltfilt</span><span class="p">(</span><span class="n">sos</span><span class="p">,</span> <span class="n">source</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">chunks_to_h5</span><span class="p">(</span><span class="n">filtered</span><span class="p">,</span> <span class="s2">&quot;filtered.h5&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.split">
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.split" title="Link to this definition"></a></dt>
+<dd><p>Split a tuple-chunk iterator into individual per-entry iterators.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding tuples of np.ndarray chunks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>One iterator per entry in the tuple.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of iterators</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">7.</span><span class="p">])),</span>
+<span class="gp">... </span>          <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">8.</span><span class="p">]))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="go">[array([1.]), array([2.])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+<span class="go">[array([7.]), array([8.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.start_after">
+<span class="sig-name descname"><span class="pre">start_after</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'same'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.start_after" title="Link to this definition"></a></dt>
+<dd><p>Drop the first <em>n</em> samples from a chunk iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chunks</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of samples to drop from the beginning.</p></li>
+<li><p><strong>chunk_size</strong> (<em>&quot;same&quot;</em><em>, </em><em>&quot;const&quot;</em><em>, or </em><em>int</em>) – Output chunk sizing.
+<code class="docutils literal notranslate"><span class="pre">&quot;same&quot;</span></code> (default) preserves input chunk boundaries,
+merely trimming the leading chunk.
+<code class="docutils literal notranslate"><span class="pre">&quot;const&quot;</span></code> rechunks so every output chunk has the
+same size as the first input chunk.
+An integer value is passed directly to
+<a class="reference internal" href="#chunkiter.rechunk" title="chunkiter.rechunk"><code class="xref py py-func docutils literal notranslate"><span class="pre">chunkiter.rechunk()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Chunks with the first <em>n</em> samples removed.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">])])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">start_after</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="go">[array([3., 4., 5.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.stop_after">
+<span class="sig-name descname"><span class="pre">stop_after</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.stop_after" title="Link to this definition"></a></dt>
+<dd><p>Yield only the first <em>N</em> samples from a chunk iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p></li>
+<li><p><strong>N</strong> (<em>int</em>) – Maximum number of samples to yield along axis 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Chunks trimmed to <em>N</em> total samples.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span> <span class="mf">6.</span><span class="p">])])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">stop_after</span><span class="p">(</span><span class="n">chunks</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="go">[array([1., 2., 3.]), array([4.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.sum">
+<span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.sum" title="Link to this definition"></a></dt>
+<dd><p>Compute the sum along the first dimension of a chunk iterator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Element-wise sum along axis 0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="go">10.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.tee">
+<span class="sig-name descname"><span class="pre">tee</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_buffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.tee" title="Link to this definition"></a></dt>
+<dd><p>Memory-bounded <code class="docutils literal notranslate"><span class="pre">itertools.tee</span></code> for chunk iterators.</p>
+<p>Standard <code class="docutils literal notranslate"><span class="pre">itertools.tee</span></code> buffers ALL data, potentially filling RAM.
+This variant keeps at most <em>max_buffer</em> items and raises <code class="docutils literal notranslate"><span class="pre">Exception</span></code>
+if consumers diverge too far.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Source iterator.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of output iterators.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, returns a
+generator that yields an unlimited number of tee’d iterators.</p></li>
+<li><p><strong>max_buffer</strong> (<em>int</em>) – Maximum buffered items before raising <code class="docutils literal notranslate"><span class="pre">Exception</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>n</em> independent iterators (or an infinite generator
+if <em>n</em> is <code class="docutils literal notranslate"><span class="pre">None</span></code>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple or generator</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – If any consumer falls behind the buffer window.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">tee</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">[array([1., 2.]), array([3., 4.])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="go">[array([1., 2.]), array([3., 4.])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.unwrap">
+<span class="sig-name descname"><span class="pre">unwrap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.unwrap" title="Link to this definition"></a></dt>
+<dd><p>Apply <code class="docutils literal notranslate"><span class="pre">np.unwrap</span></code> along the first dimension of a chunk iterator.</p>
+<p>Correctly handles phase continuity across chunk boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – Iterator yielding np.ndarray chunks.</p>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray</em> – Unwrapped chunks.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Phase jumps between chunks handled correctly:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunks</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.1</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.9</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">chunkiter</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">chunks</span><span class="p">))</span>
+<span class="go">[array([3.1, 3.2, 3.283..., 3.383...])]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.upfirdn">
+<span class="sig-name descname"><span class="pre">upfirdn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_stream</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">down</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flush</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">np</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;module</span> <span class="pre">'numpy'</span> <span class="pre">from</span> <span class="pre">'/home/runner/.local/lib/python3.12/site-packages/numpy/__init__.py'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.upfirdn" title="Link to this definition"></a></dt>
+<dd><p>Streaming upfirdn.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> (<em>FIR filter</em>)</p></li>
+<li><p><strong>x_stream</strong> (<em>generator yielding ndarray chunks</em>)</p></li>
+<li><p><strong>up</strong> (<em>int</em>)</p></li>
+<li><p><strong>down</strong> (<em>int</em>)</p></li>
+<li><p><strong>flush</strong> (<em>bool</em>) – If True, emit tail samples like scipy/matlab.</p></li>
+<li><p><strong>np</strong> (<em>module</em><em> (</em><em>numpy</em><em> or </em><em>jax.numpy</em><em>)</em>)</p></li>
+<li><p><strong>jit</strong> (<em>bool</em>) – If True and np is jax.numpy, compile core computations using jax.jit.
+Only recommended when chunk lengths are strictly uniform.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray chunks</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.yielding_chunks_to_binaryfile">
+<span class="sig-name descname"><span class="pre">yielding_chunks_to_binaryfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.yielding_chunks_to_binaryfile" title="Link to this definition"></a></dt>
+<dd><p>Write chunks to a binary file format, yielding data for further streaming.</p>
+<p>Streaming-capable — can write to sockets via <code class="docutils literal notranslate"><span class="pre">socket.makefile</span></code>.
+See <a class="reference internal" href="#chunkiter.IterableBinaryFileChunks" title="chunkiter.IterableBinaryFileChunks"><code class="xref py py-class docutils literal notranslate"><span class="pre">IterableBinaryFileChunks</span></code></a> for reading back.</p>
+<p>The binary format (repeating) consists of:</p>
+<ul class="simple">
+<li><p>string <code class="docutils literal notranslate"><span class="pre">TUPLE</span></code></p></li>
+<li><p>64-bit integer: number of ndarrays in this tuple</p></li>
+<li><p>For each ndarray: string <code class="docutils literal notranslate"><span class="pre">ARRAY</span></code>, 64-bit integer typestr length,
+typestring, 64-bit integer ndim, shape (ndim × 64-bit), raw array data (C order)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> chunks (or tuples thereof).</p></li>
+<li><p><strong>file</strong> – Writable binary file-like object.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Print progress with throughput.</p></li>
+<li><p><strong>preprocessor</strong> (<em>callable</em><em>, </em><em>optional</em>) – Transform applied before writing
+(yielded data is still original).</p></li>
+<li><p><strong>skip</strong> (<em>int</em>) – Only write every <code class="docutils literal notranslate"><span class="pre">skip</span></code>-th chunk (1 = every chunk).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or tuple of np.ndarray</em> – Original chunks, unchanged.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;input.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">yielding_chunks_to_binaryfile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">pass</span>  <span class="c1"># chunks are written to disk and can also be processed here</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chunkiter.yielding_chunks_to_h5">
+<span class="sig-name descname"><span class="pre">yielding_chunks_to_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expectedchunks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chunkiter.yielding_chunks_to_h5" title="Link to this definition"></a></dt>
+<dd><p>Stream chunks from an iterator to HDF5, yielding data unchanged for further processing.</p>
+<p>This is the streaming variant — each chunk is written and yielded immediately.
+Use <a class="reference internal" href="#chunkiter.chunks_to_h5" title="chunkiter.chunks_to_h5"><code class="xref py py-func docutils literal notranslate"><span class="pre">chunks_to_h5()</span></code></a> for the fire-and-forget variant that consumes the
+entire iterator without yielding.</p>
+<p>Handles single arrays and tuples of arrays, writing to one or multiple files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iterator</strong> – Iterator yielding <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code> chunks (or tuples thereof).</p></li>
+<li><p><strong>filename</strong> (<em>str</em><em> or </em><em>tuple</em>) – Output HDF5 filename(s).</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>tuple</em><em>, </em><em>None</em>) – Dataset name(s).  <code class="docutils literal notranslate"><span class="pre">None</span></code> auto-names to <code class="docutils literal notranslate"><span class="pre">data</span></code>
+or <code class="docutils literal notranslate"><span class="pre">data0</span></code>, <code class="docutils literal notranslate"><span class="pre">data1</span></code>, …</p></li>
+<li><p><strong>expectedchunks</strong> (<em>int</em>) – Expected total number of chunks (for HDF5 extent hint).</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Print progress.</p></li>
+<li><p><strong>preprocessor</strong> (<em>callable</em><em>, </em><em>optional</em>) – Transformation applied before writing
+(yielded data is still the original).</p></li>
+<li><p><strong>skip</strong> (<em>int</em>) – Only write/save every <code class="docutils literal notranslate"><span class="pre">skip</span></code>-th chunk (1 = every chunk).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>np.ndarray or tuple of np.ndarray</em> – Original (unprocessed) chunks.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">IterableH5Chunks</span><span class="p">(</span><span class="s2">&quot;input.h5&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">processed</span> <span class="o">=</span> <span class="p">(</span><span class="n">chunk</span> <span class="o">*</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">source</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Write to disk while still being able to further process:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">saved</span> <span class="o">=</span> <span class="n">chunkiter</span><span class="o">.</span><span class="n">yielding_chunks_to_h5</span><span class="p">(</span><span class="n">processed</span><span class="p">,</span> <span class="s2">&quot;output.h5&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">chunkiter</span><span class="o">.</span><span class="n">chunks_to_binaryfile</span><span class="p">(</span><span class="n">saved</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.bin&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Chunkiter’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Leberwurscht.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
